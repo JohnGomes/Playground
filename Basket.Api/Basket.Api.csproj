@@ -5,10 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Proto\basket.proto" GrpcServices="Server" Generator="MSBuild:Compile" />
-        <Content Include="@(Protobuf)" />
-        <None Remove="@(Protobuf)" />
+        <Protobuf Include="Proto\basket.proto" GrpcServices="Server" />
     </ItemGroup>
+    
 
     <ItemGroup>
       <PackageReference Include="Google.Protobuf" Version="3.11.2" />
@@ -19,6 +18,22 @@
       <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0-rc5" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.0.0-rc5" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.0.0-rc5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Controllers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Controllers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Controllers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Controllers\**" />
     </ItemGroup>
 
 

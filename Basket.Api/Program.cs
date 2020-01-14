@@ -32,17 +32,6 @@ namespace Basket.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.CaptureStartupErrors(false);
-                    webBuilder.ConfigureKestrel(o =>
-                    {
-                        o.Listen(IPAddress.Loopback, 44376);
-                        var ports = GetDefinedPorts(configuration);
-
-                        // o.Listen(IPAddress.Any, 44376, options => { options.Protocols = HttpProtocols.Http1AndHttp2; });
-                        // o.Listen(IPAddress.Any, ports.grpcPort,
-                        //     options => { options.Protocols = HttpProtocols.Http1AndHttp2; });
-                        // o.Listen(IPAddress.Any, 44376, options => { options.Protocols = HttpProtocols.Http2; });
-                    });
-                    webBuilder.UseUrls("http://localhost:44376");
                     webBuilder.UseStartup<Startup>();
                 });
         }

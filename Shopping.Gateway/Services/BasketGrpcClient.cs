@@ -29,27 +29,27 @@ namespace Shopping.Gateway.Services
         {
             return await GrpcService.CallService(_urls.GrpcBasket, async channel =>
             {
-                var client = new Basket.BasketClient(channel);
-                _logger.LogDebug("grpc client created, request = {@id}");
-                var response = new CatalogItemRequest();
-                try
-                {
-                     response = await client.GetAsync(new Empty());
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                }
-
-                _logger.LogDebug("grpc response {@response}", response);
+                // var client = new Basket.BasketClient(channel);
+                // _logger.LogDebug("grpc client created, request = {@id}");
+                // var response = new CatalogItemRequest();
+                // try
+                // {
+                //      response = await client.GetAsync(new Empty());
+                // }
+                // catch (Exception e)
+                // {
+                //     _logger.LogError(e.Message);
+                // }
+                //
+                // _logger.LogDebug("grpc response {@response}", response);
 
 
                 var catalogItem = new CatalogItem();
 
-                catalogItem.Id = response.Id;
-                catalogItem.Name = response.Name;
-                catalogItem.Price = (decimal) response.Price;
-                catalogItem.PictureUri = response.Pictureuri;
+                // catalogItem.Id = response.Id;
+                // catalogItem.Name = response.Name;
+                // catalogItem.Price = (decimal) response.Price;
+                // catalogItem.PictureUri = response.Pictureuri;
 
                 return catalogItem;
             });

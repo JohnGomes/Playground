@@ -8,6 +8,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apis", "Apis", "{15319D00-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Api", "Basket.Api\Basket.Api.csproj", "{03BB01FD-7D4D-4110-9186-224952BCCAF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeter", "GrpcGreeter\GrpcGreeter.csproj", "{FD832F59-B32B-44D1-8ECB-4DA525BB7BEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcGreeterClient", "GrpcGreeterClient\GrpcGreeterClient.csproj", "{B5D56813-B46D-4F45-A6DE-4EA093D6955F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,5 +30,13 @@ Global
 		{03BB01FD-7D4D-4110-9186-224952BCCAF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03BB01FD-7D4D-4110-9186-224952BCCAF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03BB01FD-7D4D-4110-9186-224952BCCAF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD832F59-B32B-44D1-8ECB-4DA525BB7BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD832F59-B32B-44D1-8ECB-4DA525BB7BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD832F59-B32B-44D1-8ECB-4DA525BB7BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD832F59-B32B-44D1-8ECB-4DA525BB7BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5D56813-B46D-4F45-A6DE-4EA093D6955F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5D56813-B46D-4F45-A6DE-4EA093D6955F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5D56813-B46D-4F45-A6DE-4EA093D6955F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5D56813-B46D-4F45-A6DE-4EA093D6955F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

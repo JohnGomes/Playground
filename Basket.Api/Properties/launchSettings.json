@@ -1,31 +1,13 @@
 ﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:44376/",
-      "sslPort": 0
-    }
-  },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
+    "BasketApi": {
+      "commandName": "Project",
       "launchBrowser": false,
       "launchUrl": "",
+      "applicationUrl": "https://localhost:44376",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "GRPC_PORT": "81",
-        "PORT": "80"
-      }
-    },
-    "Basket.Api": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "",
-      "applicationUrl": "http://localhost:44376/",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_URLS": "https://localhost:44376"
       }
     }
   }

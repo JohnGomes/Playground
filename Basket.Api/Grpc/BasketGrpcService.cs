@@ -19,68 +19,12 @@ namespace Basket.Api.Grpc
             _logger = logger;
         }
         
-        [AllowAnonymous]
-        public override async Task<CatalogItemRequest> Get(Empty request, ServerCallContext context)
+        public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
         {
-            _logger.LogInformation("Begin grpc call from method {Method} for basket id {Id}", context.Method);
-
-            //var data = await _repository.GetBasketAsync(request.Id);
-
-            // if (data != null)
-            // {
-            //     context.Status = new Status(StatusCode.OK, $"Basket with id {request.Id} do exist");
-            //
-            //     return MapToCustomerBasketResponse(data);
-            // }
-            // else
-            // {
-            //     context.Status = new Status(StatusCode.NotFound, $"Basket with id {request.Id} do not exist");
-            // }
-
-            return new CatalogItemRequest();
+            return Task.FromResult(new HelloReply
+            {
+                Message = "Hello " + request.Name + " From Basket Api"
+            });
         }
-        
-        [AllowAnonymous]
-        public override async Task<CustomerBasketResponse> GetBasketById(BasketRequest request, ServerCallContext context)
-        {
-            _logger.LogInformation("Begin grpc call from method {Method} for basket id {Id}", context.Method, request.Id);
-
-            //var data = await _repository.GetBasketAsync(request.Id);
-
-            // if (data != null)
-            // {
-            //     context.Status = new Status(StatusCode.OK, $"Basket with id {request.Id} do exist");
-            //
-            //     return MapToCustomerBasketResponse(data);
-            // }
-            // else
-            // {
-            //     context.Status = new Status(StatusCode.NotFound, $"Basket with id {request.Id} do not exist");
-            // }
-
-            return new CustomerBasketResponse();
-        }
-
-        // [AllowAnonymous]
-        // public override async Task<CustomerBasketResponse> GetBasketById(BasketRequest request, ServerCallContext context)
-        // {
-        //     _logger.LogInformation("Begin grpc call from method {Method} for basket id {Id}", context.Method, request.Id);
-        //
-        //     var data = await _repository.GetBasketAsync(request.Id);
-        //
-        //     if (data != null)
-        //     {
-        //         context.Status = new Status(StatusCode.OK, $"Basket with id {request.Id} do exist");
-        //
-        //         return MapToCustomerBasketResponse(data);
-        //     }
-        //     else
-        //     {
-        //         context.Status = new Status(StatusCode.NotFound, $"Basket with id {request.Id} do not exist");
-        //     }
-        //
-        //     return new CustomerBasketResponse();
-        // }
-
     }
 }
