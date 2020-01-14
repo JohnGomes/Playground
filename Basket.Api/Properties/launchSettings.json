@@ -4,8 +4,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:50154",
-      "sslPort": 44374
+      "applicationUrl": "http://localhost:51190",
+      "sslPort": 44376
     }
   },
   "profiles": {
@@ -15,14 +15,14 @@
       "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HTTPS_PORT": "44374"
+        "ASPNETCORE_HTTPS_PORT": "44376"
       }
     },
-    "Shopping.Gateway": {
+    "Basket.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "",
-      "applicationUrl": "https://localhost:44373;http://localhost:44374",
+      "applicationUrl": "https://localhost:44375;http://localhost:44376",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

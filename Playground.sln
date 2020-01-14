@@ -4,6 +4,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopping.Gateway", "Shopping.Gateway\Shopping.Gateway.csproj", "{FE10D102-CDE6-402E-ACF1-B2471B974489}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apis", "Apis", "{15319D00-1BD0-4B71-9EEE-B835728E967B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.Api", "Basket.Api\Basket.Api.csproj", "{03BB01FD-7D4D-4110-9186-224952BCCAF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -11,11 +15,16 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FE10D102-CDE6-402E-ACF1-B2471B974489} = {0CC1E2CC-5AFC-455E-81B4-80278AE901A4}
+		{03BB01FD-7D4D-4110-9186-224952BCCAF3} = {15319D00-1BD0-4B71-9EEE-B835728E967B}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FE10D102-CDE6-402E-ACF1-B2471B974489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FE10D102-CDE6-402E-ACF1-B2471B974489}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE10D102-CDE6-402E-ACF1-B2471B974489}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE10D102-CDE6-402E-ACF1-B2471B974489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03BB01FD-7D4D-4110-9186-224952BCCAF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03BB01FD-7D4D-4110-9186-224952BCCAF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03BB01FD-7D4D-4110-9186-224952BCCAF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03BB01FD-7D4D-4110-9186-224952BCCAF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

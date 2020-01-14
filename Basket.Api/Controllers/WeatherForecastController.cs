@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Shopping.Gateway.Controllers
+namespace Basket.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

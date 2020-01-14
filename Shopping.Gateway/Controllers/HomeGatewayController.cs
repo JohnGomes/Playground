@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Shopping.Gateway.Controllers
 {
-    [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("")]
-    public class HomeController : Controller
+    public class HomeGatewayController : Controller
     {
         // GET
         [HttpGet]
