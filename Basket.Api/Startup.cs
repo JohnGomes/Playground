@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Basket.Api.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -27,15 +30,20 @@ namespace Basket.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddGrpc(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
+            
             services.AddSwaggerGen(options =>
             {
-                options.DescribeAllEnumsAsStrings();
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Basket API",
                     Version = "v1",
                     Description = "The Basket Service HTTP API"
                 });
+
 
                 //TODO
                 // options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -66,7 +74,7 @@ namespace Basket.Api
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
             
@@ -81,7 +89,31 @@ namespace Basket.Api
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGrpcService<BasketGrpcService>();
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllers();
+                endpoints.MapGet("/_proto/", GetProtoBuf(env));
+            });
+        }
+
+        private static RequestDelegate GetProtoBuf(IWebHostEnvironment env)
+        {
+            return async ctx =>
+            {
+                ctx.Response.ContentType = "text/plain";
+                using var fs = new FileStream(Path.Combine(env.ContentRootPath, "Proto", "basket.proto"), FileMode.Open, FileAccess.Read);
+                using var sr = new StreamReader(fs);
+                while (!sr.EndOfStream)
+                {
+                    var line = await sr.ReadLineAsync();
+                    if (line != "/* >>" || line != "<< */")
+                    {
+                        await ctx.Response.WriteAsync(line);
+                    }
+                }
+            };
         }
     }
 }

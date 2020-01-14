@@ -14,7 +14,7 @@ namespace Basket.Api.Controllers
         [HttpGet]
         public ActionResult Get()
         {
-            return Ok(new CatalogItem
+            return Ok(new CatalogItemRequest
             {
                 Id = RandomizerFactory.GetRandomizer(new FieldOptionsInteger{Max=99, Min=1,UseNullValues = false}).Generate(),
                 Name = RandomizerFactory.GetRandomizer(new FieldOptionsFullName()).Generate(),

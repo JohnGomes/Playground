@@ -1,6 +1,6 @@
 namespace Basket.Api.Models
 {
-    public class CatalogItem
+    public class CatalogItemRequest
     {
         public int? Id { get; set; }
 

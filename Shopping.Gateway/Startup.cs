@@ -83,10 +83,18 @@ namespace Shopping.Gateway
             IConfiguration configuration)
         {
             if (env.IsDevelopment())
+            {
                 services.AddHttpClient<IBasketApiClient, BasketApiClient>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
+                
+                services.AddHttpClient<IBasketGrpcClient, BasketGrpcClient>()
+                    .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
+            }
             else
+            {
                 services.AddHttpClient<IBasketApiClient, BasketApiClient>();
+                services.AddHttpClient<IBasketGrpcClient, BasketGrpcClient>();
+            }
 
             //TODO
 

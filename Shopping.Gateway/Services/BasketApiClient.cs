@@ -24,16 +24,8 @@ namespace Shopping.Gateway.Services
 
         public async Task<CatalogItem> GetCatalogItem(int id)
         {
-            
-            // _apiClient.ClientCredentials.ServiceCertificate.SslCertificateAuthentication = 
-            //     new X509ServiceCertificateAuthentication()
-            //     {
-            //         CertificateValidationMode = X509CertificateValidationMode.None,
-            //         RevocationMode = X509RevocationMode.NoCheck
-            //     };
-            
+
             var url = _urls.Basket + UrlsConfig.BasketOperations.GetItem();
-            var content = new StringContent(JsonConvert.SerializeObject(id), System.Text.Encoding.UTF8, "application/json");
             var response = await _apiClient.GetAsync(url);
 
             response.EnsureSuccessStatusCode();

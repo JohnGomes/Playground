@@ -1,5 +1,8 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Shopping.Gateway.Models;
+using Shopping.Gateway.Services;
 
 namespace Shopping.Gateway.Controllers
 {
@@ -7,11 +10,19 @@ namespace Shopping.Gateway.Controllers
     [ApiController]
     public class BasketGrpcGatewayController : Controller
     {
+        private IBasketGrpcClient _basketGrpcClient;
+
+        public BasketGrpcGatewayController(IBasketGrpcClient basketGrpcClient)
+        {
+            _basketGrpcClient = basketGrpcClient;
+        }
         // GET
         [HttpGet]
-        public ActionResult Get()
+        public async Task<CatalogItem> Get()
         {
-            return Ok(new Object());
+            // return Ok(new Object());
+            
+            return await _basketGrpcClient.GetCatalogItem();
         }
     }
 }

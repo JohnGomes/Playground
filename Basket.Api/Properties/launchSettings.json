@@ -4,25 +4,26 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:51190",
-      "sslPort": 44376
+      "applicationUrl": "http://localhost:44376/",
+      "sslPort": 0
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HTTPS_PORT": "44376"
+        "GRPC_PORT": "81",
+        "PORT": "80"
       }
     },
     "Basket.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "",
-      "applicationUrl": "https://localhost:44375;http://localhost:44376",
+      "applicationUrl": "http://localhost:44376/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
