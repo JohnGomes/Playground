@@ -4,13 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Basket.Api.Grpc;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -31,6 +34,7 @@ namespace Basket.Api
         {
             services.AddControllers();
             services.AddGrpc(o=>o.EnableDetailedErrors = true);
+            services.AddCustomHealthCheck(Configuration);
 
             
             services.AddSwaggerGen(options =>
@@ -93,6 +97,16 @@ namespace Basket.Api
                 endpoints.MapGrpcService<BasketGrpcService>();
                 endpoints.MapControllers();
                 endpoints.MapGet("/_proto/", GetProtoBuf(env));
+                
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
+                {
+                    Predicate = r => r.Name.Contains("self")
+                });
             });
         }
 
@@ -112,6 +126,43 @@ namespace Basket.Api
                     }
                 }
             };
+        }
+    }
+    
+    public static class CustomExtensionMethods
+    {
+        public static IServiceCollection AddCustomHealthCheck(this IServiceCollection services, IConfiguration configuration)
+        {
+            var hcBuilder = services.AddHealthChecks();
+
+            hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
+
+            //TODO
+            // hcBuilder
+            //     .AddRedis(
+            //         configuration["ConnectionString"],
+            //         name: "redis-check",
+            //         tags: new string[] { "redis" });
+            //
+            // if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            // {
+            //     hcBuilder
+            //         .AddAzureServiceBusTopic(
+            //             configuration["EventBusConnection"],
+            //             topicName: "eshop_event_bus",
+            //             name: "basket-servicebus-check",
+            //             tags: new string[] { "servicebus" });
+            // }
+            // else
+            // {
+            //     hcBuilder
+            //         .AddRabbitMQ(
+            //             $"amqp://{configuration["EventBusConnection"]}",
+            //             name: "basket-rabbitmqbus-check",
+            //             tags: new string[] { "rabbitmqbus" });
+            // }
+
+            return services;
         }
     }
 }
