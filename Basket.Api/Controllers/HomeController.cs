@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Basket.Api.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
-    [Route("swagger")]
+    [Route("")]
     public class HomeController : Controller
     {
         // GET

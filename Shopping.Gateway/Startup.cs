@@ -57,7 +57,7 @@ namespace Shopping.Gateway
             {
                 c.SwaggerEndpoint(
                     $"{(!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty)}/swagger/v1/swagger.json",
-                    "Purchase BFF V1");
+                    "Shopping Gateway V1");
                 c.RoutePrefix = string.Empty;
                 //TODO
                 // c.OAuthClientId("mobileshoppingaggswaggerui");

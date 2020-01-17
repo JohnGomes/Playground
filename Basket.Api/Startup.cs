@@ -30,42 +30,39 @@ namespace Basket.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddGrpc();
-            // options =>
-            // {
-            //     options.EnableDetailedErrors = true;
-            // });
+            services.AddGrpc(o=>o.EnableDetailedErrors = true);
+
             
-            // services.AddSwaggerGen(options =>
-            // {
-            //     options.SwaggerDoc("v1", new OpenApiInfo
-            //     {
-            //         Title = "Basket API",
-            //         Version = "v1",
-            //         Description = "The Basket Service HTTP API"
-            //     });
-            //
-            //
-            //     //TODO
-            //     // options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-            //     // {
-            //     //     Type = SecuritySchemeType.OAuth2,
-            //     //     Flows = new OpenApiOAuthFlows()
-            //     //     {
-            //     //         Implicit = new OpenApiOAuthFlow()
-            //     //         {
-            //     //             AuthorizationUrl = new Uri($"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize"),
-            //     //             TokenUrl = new Uri($"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token"),
-            //     //             Scopes = new Dictionary<string, string>()
-            //     //             {
-            //     //                 { "basket", "Basket API" }
-            //     //             }
-            //     //         }
-            //     //     }
-            //     // });
-            //     //
-            //     // options.OperationFilter<AuthorizeCheckOperationFilter>();
-            // });
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Basket API",
+                    Version = "v1",
+                    Description = "The Basket Service HTTP API"
+                });
+            
+            
+                //TODO
+                // options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                // {
+                //     Type = SecuritySchemeType.OAuth2,
+                //     Flows = new OpenApiOAuthFlows()
+                //     {
+                //         Implicit = new OpenApiOAuthFlow()
+                //         {
+                //             AuthorizationUrl = new Uri($"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize"),
+                //             TokenUrl = new Uri($"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token"),
+                //             Scopes = new Dictionary<string, string>()
+                //             {
+                //                 { "basket", "Basket API" }
+                //             }
+                //         }
+                //     }
+                // });
+                //
+                // options.OperationFilter<AuthorizeCheckOperationFilter>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,22 +76,22 @@ namespace Basket.Api
 
             app.UseRouting();
             
-            // app.UseSwagger()
-            //     .UseSwaggerUI(setup =>
-            //     {
-            //         setup.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "Basket.API V1");
-            //         //TODO
-            //         // setup.OAuthClientId("basketswaggerui");
-            //         // setup.OAuthAppName("Basket Swagger UI");
-            //     });
+            app.UseSwagger()
+                .UseSwaggerUI(setup =>
+                {
+                    setup.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "Basket.API V1");
+                    setup.RoutePrefix = string.Empty;
+                    //TODO
+                    // setup.OAuthClientId("basketswaggerui");
+                    // setup.OAuthAppName("Basket Swagger UI");
+                });
 
             // app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<BasketGrpcService>();
-                // endpoints.MapDefaultControllerRoute();
-                // endpoints.MapControllers();
+                endpoints.MapControllers();
                 endpoints.MapGet("/_proto/", GetProtoBuf(env));
             });
         }
