@@ -13,21 +13,39 @@ namespace GrpcGreeterClient
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Press any key to exit...");
-            
-            await Greeter();
-            
+            // Console.WriteLine("Press any key to exit...");
+
+            // await Greeter();
+
             await Basket();
-            
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
+
+            // Console.WriteLine("Press any key to exit...");
+            // var key = Console.ReadKey();
+            // if (key.KeyChar.ToString() == string.Empty)
+            //     Console.ReadKey();
+
+           await Read();
+        }
+
+        private static async Task Read()
+        {
+            while (true)
+            {
+                var key = Console.ReadKey();
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    await Basket();
+                    continue;
+                }
+                break;
+            }
         }
 
         private static async Task Basket()
         {
             using var channel = GrpcChannel.ForAddress("https://localhost:44376");
-            var client =  new Basket.BasketClient(channel);
-            var reply = await client.SayHelloAsync(new GrpcBasket.HelloRequest { Name = "BasketClient" });
+            var client = new Basket.BasketClient(channel);
+            var reply = await client.SayHelloAsync(new GrpcBasket.HelloRequest {Name = "BasketClient"});
             Console.WriteLine("Greeting: " + reply.Message);
         }
 

@@ -20,21 +20,4 @@
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUi" Version="5.0.0-rc5" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="Controllers\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="Controllers\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Controllers\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="Controllers\**" />
-    </ItemGroup>
-
-
 </Project>

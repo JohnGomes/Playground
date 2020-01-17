@@ -26,5 +26,16 @@ namespace Basket.Api.Grpc
                 Message = "Hello " + request.Name + " From Basket Api"
             });
         }
+
+        public override Task<CatalogItemReply> GetCatalogItem(CatalogItemRequest request, ServerCallContext context)
+        {
+            return Task.FromResult(new CatalogItemReply
+            {
+                Id = 1,
+                Name = "item",
+                PictureUri = "123",
+                Price = 10.99
+            });
+        }
     }
 }

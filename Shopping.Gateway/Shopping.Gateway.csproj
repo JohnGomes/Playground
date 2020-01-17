@@ -27,5 +27,10 @@
         <Protobuf Include="..\Basket.Api\Proto\basket.proto" GrpcServices="Client" />
     </ItemGroup>
 
+    <ItemGroup>
+        <!-- extends watching group to include *.js files -->
+        <Watch Include="**\*.js" Exclude="node_modules\**\*;**\*.js.map;obj\**\*;bin\**\*" />
+    </ItemGroup>
+
 
 </Project>

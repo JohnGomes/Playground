@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Grpc.Net.Client;
+using GrpcBasket;
 using Microsoft.AspNetCore.Mvc;
 using Shopping.Gateway.Models;
 using Shopping.Gateway.Services;
@@ -16,13 +18,12 @@ namespace Shopping.Gateway.Controllers
         {
             _basketGrpcClient = basketGrpcClient;
         }
-        // GET
+
         [HttpGet]
-        public async Task<CatalogItem> Get()
-        {
-            // return Ok(new Object());
-            
-            return await _basketGrpcClient.GetCatalogItem();
-        }
+        [Route("{id}")]
+        public async Task<CatalogItem> Get([FromQuery]int id = 1) => await _basketGrpcClient.GetCatalogItem(id);
+
+        [HttpGet]
+        public async Task<string> SayHello() => (await _basketGrpcClient.SayHello()).Message;
     }
 }

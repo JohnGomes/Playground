@@ -25,31 +25,29 @@ namespace Shopping.Gateway.Services
             _urls = config.Value;
         }
 
-        public async Task<CatalogItem> GetCatalogItem()
+        public async Task<HelloReply> SayHello()
+        {
+            return await GrpcService.CallService(_urls.GrpcBasket,
+                async channel => await new Basket.BasketClient(channel)
+                    .SayHelloAsync(new HelloRequest {Name = "Shopping Gateway"}));
+        }
+
+
+        public async Task<CatalogItem> GetCatalogItem(int id)
         {
             return await GrpcService.CallService(_urls.GrpcBasket, async channel =>
             {
-                // var client = new Basket.BasketClient(channel);
-                // _logger.LogDebug("grpc client created, request = {@id}");
-                // var response = new CatalogItemRequest();
-                // try
-                // {
-                //      response = await client.GetAsync(new Empty());
-                // }
-                // catch (Exception e)
-                // {
-                //     _logger.LogError(e.Message);
-                // }
-                //
-                // _logger.LogDebug("grpc response {@response}", response);
+                 var client = new Basket.BasketClient(channel);
+
+                var response = await client.GetCatalogItemAsync(new CatalogItemRequest{Id = id});
 
 
                 var catalogItem = new CatalogItem();
 
-                // catalogItem.Id = response.Id;
-                // catalogItem.Name = response.Name;
-                // catalogItem.Price = (decimal) response.Price;
-                // catalogItem.PictureUri = response.Pictureuri;
+                catalogItem.Id = response.Id;
+                catalogItem.Name = response.Name;
+                catalogItem.Price = (decimal) response.Price;
+                catalogItem.PictureUri = response.PictureUri;
 
                 return catalogItem;
             });
