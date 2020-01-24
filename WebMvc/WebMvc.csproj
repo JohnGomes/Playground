@@ -1,0 +1,114 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AssemblyName>WebMVC</AssemblyName>
+        <RootNamespace>Microsoft.eShopContainers.WebMVC</RootNamespace>
+        <LangVersion>8</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.2" />
+      <PackageReference Include="Microsoft.ApplicationInsights" Version="2.12.0" />
+      <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.1" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+      <PackageReference Include="Serilog" Version="2.9.1-dev-01154" />
+      <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+      <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.2-dev-10265" />
+      <PackageReference Include="Serilog.Sinks.Http" Version="5.2.0" />
+      <PackageReference Include="Serilog.Sinks.Seq" Version="4.1.0-dev-00166" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\app.component.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\app.component.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\app.component.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\app.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\basket\basket-status\basket-status.component.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\basket\basket-status\basket-status.component.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\basket\basket-status\basket-status.component.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\basket\basket.component.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\basket\basket.component.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\basket\basket.component.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\campaigns\campaigns.component.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\catalog\catalog.component.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\catalog\catalog.component.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\catalog\catalog.component.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders-detail\orders-detail.component.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders-detail\orders-detail.component.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders-detail\orders-detail.component.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders-new\orders-new.component.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders-new\orders-new.component.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders-new\orders-new.component.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders.component.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders.component.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\orders\orders.component.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\override.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\header\header.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\header\header.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\header\header.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\identity\identity.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\identity\identity.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\identity\identity.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\pager\pager.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\pager\pager.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\shared\components\pager\pager.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\site.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\toastr.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\css\_variables.scss" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\favicon.ico" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Bold.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Bold.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Bold.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Bold.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Bold.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Regular.eot" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Regular.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Regular.ttf" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Regular.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\fonts\Montserrat-Regular.woff2" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\arrow-down.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\arrow-right.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\brand.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\brand_dark.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\cart-inoperative.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\cart.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\logout.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\main_banner.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\main_banner_text.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\main_banner_text.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\main_footer_text.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\my_orders.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\images\refresh.svg" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\js\site.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\js\site.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\@microsoft\signalr\dist\browser\signalr.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\@microsoft\signalr\dist\browser\signalr.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\bootstrap\dist\css\bootstrap.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery-validate\jquery.validate.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery-validate\jquery.validate.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery\core.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery\jquery.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery\jquery.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery\jquery.min.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery\jquery.slim.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery\jquery.slim.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\jquery\jquery.slim.min.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\toastr\toastr.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\toastr\toastr.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\toastr\toastr.min.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\lib\toastr\toastr.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\wwwroot\_references.js" />
+    </ItemGroup>
+
+
+</Project>

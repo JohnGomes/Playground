@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq-eshop
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq-eshop
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=Pass@word123
+        
+  sqlserver:
+    image: microsoft/mssql-server-linux:latest
+    container_name: sqlserver-eshop
+    volumes:
+      - sqlserverdata:/var/opt/sqlserver-eshop
+    ports:
+      - "1434:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Pass@word123
+volumes:
+  sqlserverdata:
+    external: true
+  rabbitmqdata:
+    external: true
