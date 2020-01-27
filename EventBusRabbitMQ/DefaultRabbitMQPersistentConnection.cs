@@ -79,7 +79,7 @@ namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBusRabbitMQ
                 policy.Execute(() =>
                 {
                     //TODO
-                     _connectionFactory.Uri = new Uri("amqp://admin:Pass%40word123@localhost:5672");
+                     // _connectionFactory.Uri = new Uri("amqp://admin:Pass%40word123@localhost:5672");
                      // _connectionFactory.UserName = "admin";
                      // _connectionFactory.Password = "Pass@word123";
                      //

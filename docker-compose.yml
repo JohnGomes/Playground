@@ -1,6 +1,33 @@
 version: '3.4'
 
 services:
+  catalog-api:
+    container_name: catalog-api-eshop
+    build:
+      context: .
+      dockerfile: Catalog.Api/Dockerfile
+    depends_on:
+      - sqlserver
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionString=server=sqlserver-eshop;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;
+      - PicBaseUrl=http://localhost:5202/c/api/v1/catalog/items/[0]/pic/  #Local: You need to open your local dev-machine firewall at range 5100-5110.
+      - EventBusConnection=rabbitmq-eshop
+      - EventBusUserName=admin
+      - EventBusPassword=Pass@word123
+      - AzureStorageAccountName=
+      - AzureStorageAccountKey=
+      - UseCustomizationData=True
+      - AzureServiceBusEnabled=False
+      - AzureStorageEnabled=False
+      - ApplicationInsights__InstrumentationKey=
+      - OrchestratorType=
+      - GRPC_PORT=81
+      - PORT=80
+      - PATH_BASE=/catalog-api
+    ports:
+      - "44322:80"
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq-eshop

@@ -1,4 +1,7 @@
-﻿namespace Microsoft.eShopOnContainers.Services.Catalog.API.Infrastructure
+﻿using System;
+using System.Diagnostics;
+
+namespace Microsoft.eShopOnContainers.Services.Catalog.API.Infrastructure
 {
     using Microsoft.EntityFrameworkCore;
     using EntityConfigurations;
@@ -27,8 +30,27 @@
     {
         public CatalogContext CreateDbContext(string[] args)
         {
+            
+            // // Build config
+            // IConfiguration config = new ConfigurationBuilder()
+            //     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../EfDesignDemo"))
+            //     .AddJsonFile("appsettings.json")
+            //     .Build();
+            //
+            // // Get connection string
+            // var optionsBuilder = new DbContextOptionsBuilder<ProductsDbContext>();
+            // var connectionString = config.GetConnectionString(nameof(ProductsDbContext));
+            // optionsBuilder.UseSqlServer(connectionString, b => b.MigrationsAssembly("EfDesignDemo.EF.Design"));
+            // return new ProductsDbContext(optionsBuilder.Options);
+            //
+            //
+            
+            var connectionString =
+                "server=localhost,1434;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;";
             var optionsBuilder =  new DbContextOptionsBuilder<CatalogContext>()
-                .UseSqlServer("server=localhost,1434;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;");
+                .UseSqlServer(connectionString);
+            
+            Console.WriteLine(connectionString);
 
             return new CatalogContext(optionsBuilder.Options);
         }

@@ -28,7 +28,7 @@
         "PicBaseUrl": "http://localhost:5202/c/api/v1/catalog/items/[0]/pic/", 
         "EventBusConnection": "rabbitmq-eshop",
         "EventBusUserName": "admin",
-        "EventBusPassword": "password",
+        "EventBusPassword": "Pass@word123",
         "AzureStorageAccountName": "${ESHOP_AZURE_STORAGE_CATALOG_NAME}",
         "AzureStorageAccountKey": "${ESHOP_AZURE_STORAGE_CATALOG_KEY}",
         "UseCustomizationData": "True",
