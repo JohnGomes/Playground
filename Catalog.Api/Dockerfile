@@ -35,4 +35,5 @@ WORKDIR /app
 COPY --from=publish /app .
 COPY --from=build /Catalog.Api/Proto /app/Proto
 COPY --from=build /Catalog.Api/Setup /app/Setup
+COPY --from=build /Catalog.Api/Pics /app/Pics
 ENTRYPOINT ["dotnet", "Catalog.Api.dll"]

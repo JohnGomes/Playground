@@ -12,7 +12,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionString=server=sqlserver-eshop;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;
-      - PicBaseUrl=http://localhost:5202/c/api/v1/catalog/items/[0]/pic/  #Local: You need to open your local dev-machine firewall at range 5100-5110.
+      - PicBaseUrl=http://localhost:44322/api/v1/catalog/items/[0]/pic/  #Local: You need to open your local dev-machine firewall at range 5100-5110.
       - EventBusConnection=rabbitmq-eshop
       - EventBusUserName=admin
       - EventBusPassword=Pass@word123

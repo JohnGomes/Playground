@@ -25,7 +25,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ConnectionString": "server=localhost,1434;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;",
-        "PicBaseUrl": "http://localhost:5202/c/api/v1/catalog/items/[0]/pic/", 
+        "PicBaseUrl": "http://localhost:44322/api/v1/catalog/items/[0]/pic/", 
         "EventBusConnection": "rabbitmq-eshop",
         "EventBusUserName": "admin",
         "EventBusPassword": "Pass@word123",
