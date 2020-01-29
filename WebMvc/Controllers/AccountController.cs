@@ -1,6 +1,6 @@
 ﻿﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+// using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,13 +42,15 @@ using System.Threading.Tasks;
         public async Task<IActionResult> Signout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+            // await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
 
             // "Catalog" because UrlHelper doesn't support nameof() for controllers
             // https://github.com/aspnet/Mvc/issues/5853
             var homeUrl = Url.Action(nameof(CatalogController.Index), "Catalog");
-            return new SignOutResult(OpenIdConnectDefaults.AuthenticationScheme,
-                new AspNetCore.Authentication.AuthenticationProperties { RedirectUri = homeUrl });
+            //TODO
+            // return new SignOutResult(OpenIdConnectDefaults.AuthenticationScheme,
+            //     new AspNetCore.Authentication.AuthenticationProperties { RedirectUri = homeUrl });
+            return new SignOutResult();
         }
     }
 }

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+// using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
-using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.Certificate;
+// using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+// using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -26,8 +28,11 @@ namespace WebApplication
 {
         public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            _env = env;
             Configuration = configuration;
         }
 
@@ -42,7 +47,7 @@ namespace WebApplication
                 .AddHealthChecks(Configuration)
                 .AddCustomMvc(Configuration)
                 // .AddDevspaces()
-                .AddHttpClientServices(Configuration);
+                .AddHttpClientServices(Configuration, _env);
 
             // IdentityModelEventSource.ShowPII  = true;       // Caution! Do NOT use in production: https://aka.ms/IdentityModel/PII
             
@@ -54,7 +59,8 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+            //TODO
+            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -98,7 +104,7 @@ namespace WebApplication
                 endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
                 {
                     Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    // ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
             });
         }
@@ -144,7 +150,7 @@ namespace WebApplication
         }
 
         // Adds all Http client services
-        public static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -161,8 +167,12 @@ namespace WebApplication
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
                    // .AddDevspacesSupport();
 
-                   services.AddHttpClient<ICatalogService, CatalogService>();
-                   // .AddDevspacesSupport();
+                   if (env.IsDevelopment())
+                        services.AddHttpClient<ICatalogService, CatalogService>().ConfigurePrimaryHttpMessageHandler(IgnoreSslErrors());
+                   
+
+                   if (!env.IsDevelopment())
+                       services.AddHttpClient<ICatalogService, CatalogService>();// .AddDevspacesSupport();
 
                    services.AddHttpClient<IOrderingService, OrderingService>()
                        .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
@@ -179,8 +189,22 @@ namespace WebApplication
 
             //add custom application services
             services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
+            
 
             return services;
+        }
+
+        private static Func<HttpMessageHandler> IgnoreSslErrors()
+        {
+            return () => new HttpClientHandler
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback =
+                    (httpRequestMessage, cert, cetChain, policyErrors) =>
+                    {
+                        return true;
+                    }
+            };
         }
 
 
@@ -196,29 +220,32 @@ namespace WebApplication
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                //TODO
+                // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddCookie(setup => setup.ExpireTimeSpan = TimeSpan.FromMinutes(sessionCookieLifetime))
-            .AddOpenIdConnect(options =>
-            {
-                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.Authority = identityUrl.ToString();
-                options.SignedOutRedirectUri = callBackUrl.ToString();
-                options.ClientId = useLoadTest ? "mvctest" : "mvc";
-                options.ClientSecret = "secret";
-                options.ResponseType = useLoadTest ? "code id_token token" : "code id_token";
-                options.SaveTokens = true;
-                options.GetClaimsFromUserInfoEndpoint = true;
-                options.RequireHttpsMetadata = false;
-                options.Scope.Add("openid");
-                options.Scope.Add("profile");
-                options.Scope.Add("orders");
-                options.Scope.Add("basket");
-                options.Scope.Add("marketing");
-                options.Scope.Add("locations");
-                options.Scope.Add("webshoppingagg");
-                options.Scope.Add("orders.signalrhub");
-            });
+            ;
+            //TODO
+            // .AddOpenIdConnect(options =>
+            // {
+            //     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //     options.Authority = identityUrl.ToString();
+            //     options.SignedOutRedirectUri = callBackUrl.ToString();
+            //     options.ClientId = useLoadTest ? "mvctest" : "mvc";
+            //     options.ClientSecret = "secret";
+            //     options.ResponseType = useLoadTest ? "code id_token token" : "code id_token";
+            //     options.SaveTokens = true;
+            //     options.GetClaimsFromUserInfoEndpoint = true;
+            //     options.RequireHttpsMetadata = false;
+            //     options.Scope.Add("openid");
+            //     options.Scope.Add("profile");
+            //     options.Scope.Add("orders");
+            //     options.Scope.Add("basket");
+            //     options.Scope.Add("marketing");
+            //     options.Scope.Add("locations");
+            //     options.Scope.Add("webshoppingagg");
+            //     options.Scope.Add("orders.signalrhub");
+            // });
 
             return services;
         }

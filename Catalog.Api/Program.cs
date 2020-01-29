@@ -73,14 +73,14 @@ namespace Catalog.Api
                 .ConfigureKestrel(options =>
                 {
                     var ports = GetDefinedPorts(configuration);
-                    options.Listen(IPAddress.Any, ports.httpPort, listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                    });
-                    options.Listen(IPAddress.Any, ports.grpcPort, listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http2;
-                    });
+                    // options.Listen(IPAddress.Any, ports.httpPort, listenOptions =>
+                    // {
+                    //     listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                    // });
+                    // options.Listen(IPAddress.Any, ports.grpcPort, listenOptions =>
+                    // {
+                    //     listenOptions.Protocols = HttpProtocols.Http2;
+                    // });
 
                 })
                 .UseStartup<Startup>()
