@@ -26,6 +26,10 @@ Run docker-compose up
 - docker-compose up
 - docker-compose down
 - docker-compose build
+- docker-compose start
+- docker-compose stop
+- docker-compose run --service-ports [service-name -- ex: basket-api]
+
 
 
 ##### interacting / manipulating containers
@@ -43,4 +47,9 @@ docker tag playground_catalog-api thegomesteam/playground:catalog-api-eshop
 
 Playground/docker-compose -- root docker compose file  
 Playground/Catalog.Api/Dockerfile -- dockerfile to create Catalog.Api image 
-Playground/WebMvc/Dockerfile -- dockerfile to create WebMvc image  
+Playground/Basket.Api/Dockerfile -- dockerfile to create Catalog.Api image 
+Playground/WebMvc/Dockerfile -- dockerfile to create WebMvc image
+
+## Helpful Docs
+
+[.NET Core 2.1 and Docker — How to get Docker to recognize a local SSL certificate](https://mikewilliams.io/net-core-2-1-and-docker-how-to-get-docker-to-recognize-a-local-ssl-certificate-6e637e1e8800)  
