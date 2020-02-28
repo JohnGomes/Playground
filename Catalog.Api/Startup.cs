@@ -192,10 +192,14 @@ namespace Catalog.Api
             }
             else
             {
+
+                var username = configuration["EventBusUserName"];
+                var password = System.Web.HttpUtility.UrlEncode(configuration["EventBusPassword"]);
+                var connection =configuration["EventBusConnection"] + ":5672";
                 hcBuilder
                     .AddRabbitMQ(
-                        $"amqp://{configuration["EventBusConnection"]}",
-                        name: "catalog-rabbitmqbus-check",
+                        $"amqp://{username}:{password}@{connection}",
+                        name: $"catalog-rabbitmqbus-check - {configuration["EventBusConnection"]}",
                         tags: new string[] { "rabbitmqbus" });
             }
 

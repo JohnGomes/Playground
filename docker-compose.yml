@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.5'
 
 services:
   web-mvc:
@@ -28,6 +28,8 @@ services:
     build:
       context: .
       dockerfile: Catalog.Api/Dockerfile
+    networks:
+      - playground_default
     depends_on:
       - sqlserver
       - rabbitmq
@@ -73,6 +75,8 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq-eshop
+    networks:
+      - playground_default
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq-eshop
       - C:/tmp/:/root/.dotnet/https
@@ -82,7 +86,6 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=Pass@word123
-
   sqlserver:
     image: microsoft/mssql-server-linux:latest
     container_name: sqlserver-eshop
@@ -93,8 +96,23 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Pass@word123
+  seq:
+    image: datalust/seq:latest
+    container_name: seq-eshop
+    volumes:
+      - seqdata:/var/opt/seqdata-eshop
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5340:80"
+      - "5341:5341"
 volumes:
   sqlserverdata:
     external: true
   rabbitmqdata:
     external: true
+  seqdata:
+      external: true
+networks:
+  playground_default:
+    name: playground_default
