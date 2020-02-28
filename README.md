@@ -32,6 +32,11 @@ Run docker-compose up
 - docker container inspect catalog-api-eshop
 - docker exec -it catalog-api-eshop sh
 
+#### Docker Hub Examples
+docker push thegomesteam/playground:catalog-api-eshop 
+docker push thegomesteam/playground:web-mvc-eshop
+
+docker tag playground_catalog-api thegomesteam/playground:catalog-api-eshop  
 
 
 ## Documents to know
