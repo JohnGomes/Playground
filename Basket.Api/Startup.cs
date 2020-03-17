@@ -83,6 +83,7 @@ namespace Basket.Api
             app.UseSwagger()
                 .UseSwaggerUI(setup =>
                 {
+                    setup.DocumentTitle = "Basket.Api Swagger";
                     setup.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "Basket.API V1");
                     setup.RoutePrefix = string.Empty;
                     //TODO

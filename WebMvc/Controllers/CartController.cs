@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.eShopOnContainers.WebMVC.Controllers
 {
+    //TODO
     [Authorize(AuthenticationSchemes = "OpenIdConnect")]
     public class CartController : Controller
     {
@@ -60,6 +61,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
             return View();
         }
 
+        
         public async Task<IActionResult> AddToCart(CatalogItem productDetails)
         {
             try

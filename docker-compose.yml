@@ -18,6 +18,7 @@ services:
       - ASPNETCORE_HTTPS_PORT=44384
       - ASPNETCORE_URLS=https://+443;http://+80
       - CERTIFICATE_PATH=C:\tmp\
+      - IdentityUrl=http://identity-api
     ports:
       - "44384:443"
       - "44385:80"
@@ -106,6 +107,24 @@ services:
     ports:
       - "5340:80"
       - "5341:5341"
+  identity-api:
+    container_name: identity-api-eshop
+    build:
+      context: .
+      dockerfile: Identity.Api/Dockerfile
+    depends_on:
+      - sqlserver
+    environment:
+      - ConnectionString=server=sqlserver-eshop;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTPS_PORT=5105
+      - ASPNETCORE_URLS=https://+443;http://+80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/CatalogApi-eshop.pfx
+      - CERTIFICATE_PATH=C:\tmp\
+      - MvcClient=https://web-mvc/
+    ports:
+      - "5105:80" 
 volumes:
   sqlserverdata:
     external: true

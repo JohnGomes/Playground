@@ -1,0 +1,32 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "https://localhost:54010",
+      "environmentVariables": {
+        "ConnectionString": "Server=tcp:127.0.0.1,5433;Database=Microsoft.eShopOnContainers.Services.IdentityDb;User Id=sa;Password=Pass@word;",
+        "ASPNETCORE_HTTPS_PORT": "54010",
+        "ASPNETCORE_URLS": "https://+443;http://+80"
+      }
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HTTPS_PORT": "54010",
+        "ASPNETCORE_URLS": "https://+443;http://+80"
+      }
+    },
+    "eShopOnContainers.Identity": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HTTPS_PORT": "54010",
+        "ASPNETCORE_URLS": "https://+443;http://+80"
+      }
+    }
+  }
+}

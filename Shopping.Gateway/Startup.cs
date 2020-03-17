@@ -69,6 +69,7 @@ namespace Shopping.Gateway
             // app.UseStaticFiles();
             app.UseSwagger().UseSwaggerUI(c =>
             {
+                c.DocumentTitle = "Basket.Api Swagger";
                 c.SwaggerEndpoint(
                     $"{(!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty)}/swagger/v1/swagger.json",
                     "Shopping Gateway V1");

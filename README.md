@@ -27,16 +27,22 @@ Run docker-compose up
 ##### composing containers
 - docker-compose up
     - [more info](https://docs.docker.com/compose/reference/up/)
+    - docker compose up --build identity-api
 - docker-compose down
     - [more info](https://docs.docker.com/compose/reference/down/)
 - docker-compose build [(optional)service-name -- ex: catalog-api]
     - [more info](https://docs.docker.com/compose/reference/build/)
+    - docker-compose build identity-api
 - docker-compose start
     - [more info](https://docs.docker.com/compose/reference/start/)
 - docker-compose stop
     - [more info](https://docs.docker.com/compose/reference/stop/)
 - docker-compose run --service-ports [service-name -- ex: basket-api]
     - [more info](https://docs.docker.com/compose/reference/run/)
+    - docker-compose run --service-ports basket-api
+- docker-compose up -d --no-deps --build <service_name>
+    - [how-to-rebuild-docker-container-in-docker-compose-yml](https://stackoverflow.com/questions/36884991/how-to-rebuild-docker-container-in-docker-compose-yml)
+    - docker-compose up -d --no-deps --build catalog-api
 
 
 
@@ -61,3 +67,14 @@ Playground/WebMvc/Dockerfile -- dockerfile to create WebMvc image
 ## Helpful Docs
 
 [.NET Core 2.1 and Docker — How to get Docker to recognize a local SSL certificate](https://mikewilliams.io/net-core-2-1-and-docker-how-to-get-docker-to-recognize-a-local-ssl-certificate-6e637e1e8800)  
+
+dotnet run --server.urls https://0.0.0.0:54010
+dotnet run --server.urls https://0.0.0.0:44384
+
+## Noteworthy Db Tables
+
+Clients  
+ClientRedirectUris  
+AspNetUsers  
+
+

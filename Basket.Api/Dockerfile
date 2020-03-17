@@ -18,6 +18,7 @@ COPY "GrpcGreeter/GrpcGreeter.csproj" "GrpcGreeter/GrpcGreeter.csproj"
 COPY "GrpcGreeterClient/GrpcGreeterClient.csproj" "GrpcGreeterClient/GrpcGreeterClient.csproj"
 COPY "Catalog.Api/Catalog.Api.csproj" "Catalog.Api/Catalog.Api.csproj"
 COPY "WebMvc/WebMvc.csproj" "WebMvc/WebMvc.csproj"
+COPY "Identity.Api/Identity.API.csproj" "Identity.Api/Identity.API.csproj"
 
 
 

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 // using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Certificate;
 // using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,6 +23,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using WebMVC.Infrastructure;
 using WebMVC.Infrastructure.Middlewares;
 using WebMVC.Services;
@@ -41,6 +45,8 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the IoC container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //TODO
+            IdentityModelEventSource.ShowPII = true;
             services.AddControllersWithViews()
                 .Services
                 .AddAppInsight(Configuration)
@@ -104,7 +110,7 @@ namespace WebApplication
                 endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
                 {
                     Predicate = _ => true,
-                    // ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
             });
         }
@@ -124,7 +130,32 @@ namespace WebApplication
         public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy());
+                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddCheck("identityapi-check", () =>
+                {
+                    try
+                    {
+                        using (var ping = new Ping())
+                        {
+                            var reply = ping.Send(configuration["IdentityUrlHC"]);
+                            if (reply.Status != IPStatus.Success)
+                            {
+                                return HealthCheckResult.Unhealthy();
+                            }
+
+                            if (reply.RoundtripTime > 100)
+                            {
+                                return HealthCheckResult.Degraded();
+                            }
+
+                            return HealthCheckResult.Healthy();
+                        }
+                    }
+                    catch
+                    {
+                        return HealthCheckResult.Unhealthy();
+                    }
+                });
                 // .AddUrlGroup(new Uri(configuration["IdentityUrlHC"]), name: "identityapi-check", tags: new string[] { "identityapi" });
 
             return services;
@@ -215,37 +246,38 @@ namespace WebApplication
             var callBackUrl = configuration.GetValue<string>("CallBackUrl");
             var sessionCookieLifetime = configuration.GetValue("SessionCookieLifetimeMinutes", 60);
 
-            // Add Authentication services          
+            // Add Authentication services         
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                //TODO
-                // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddCookie(setup => setup.ExpireTimeSpan = TimeSpan.FromMinutes(sessionCookieLifetime))
-            ;
-            //TODO
-            // .AddOpenIdConnect(options =>
-            // {
-            //     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            //     options.Authority = identityUrl.ToString();
-            //     options.SignedOutRedirectUri = callBackUrl.ToString();
-            //     options.ClientId = useLoadTest ? "mvctest" : "mvc";
-            //     options.ClientSecret = "secret";
-            //     options.ResponseType = useLoadTest ? "code id_token token" : "code id_token";
-            //     options.SaveTokens = true;
-            //     options.GetClaimsFromUserInfoEndpoint = true;
-            //     options.RequireHttpsMetadata = false;
-            //     options.Scope.Add("openid");
-            //     options.Scope.Add("profile");
-            //     options.Scope.Add("orders");
-            //     options.Scope.Add("basket");
-            //     options.Scope.Add("marketing");
-            //     options.Scope.Add("locations");
-            //     options.Scope.Add("webshoppingagg");
-            //     options.Scope.Add("orders.signalrhub");
-            // });
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = "oidc";
+                    //TODO
+                    // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddCookie(setup => setup.ExpireTimeSpan = TimeSpan.FromMinutes(sessionCookieLifetime))
+                .AddOpenIdConnect(options =>
+                {
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.Authority = identityUrl.ToString();
+                    options.SignedOutRedirectUri = callBackUrl.ToString();
+                    options.ClientId = useLoadTest ? "mvctest" : "mvc";
+                    options.ClientSecret = "secret";
+                    options.ResponseType = useLoadTest ? "code id_token token" : "code id_token";
+                    options.SaveTokens = true;
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.RequireHttpsMetadata = false;
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("orders");
+                    options.Scope.Add("basket");
+                    options.Scope.Add("marketing");
+                    options.Scope.Add("locations");
+                    options.Scope.Add("webshoppingagg");
+                    options.Scope.Add("orders.signalrhub");
+                });
 
             return services;
         }

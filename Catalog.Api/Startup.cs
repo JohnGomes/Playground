@@ -82,6 +82,7 @@ namespace Catalog.Api
             app.UseSwagger()
              .UseSwaggerUI(c =>
              {
+                 c.DocumentTitle = "Catalog.Api Swagger";
                  c.SwaggerEndpoint($"{ (!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty) }/swagger/v1/swagger.json", "Catalog.API V1");
              });
 
@@ -265,7 +266,7 @@ namespace Catalog.Api
                 options.DescribeAllEnumsAsStrings();
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "eShopOnContainers - Catalog HTTP API",
+                    Title = "Catalog API",
                     Version = "v1",
                     Description = "The Catalog Microservice HTTP API. This is a Data-Driven/CRUD microservice sample"
                 });
