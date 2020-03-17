@@ -228,7 +228,7 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Controllers
             // get context information (client name, post logout redirect URI and iframe for federated signout)
             var logout = await _interaction.GetLogoutContextAsync(model.LogoutId);
 
-            return Redirect(logout?.PostLogoutRedirectUri);
+            return Redirect(logout?.PostLogoutRedirectUri ?? _configuration.GetValue("MvcClient", ""));
         }
 
         public async Task<IActionResult> DeviceLogOut(string redirectUrl)
