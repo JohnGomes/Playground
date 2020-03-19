@@ -78,20 +78,6 @@ namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBusRabbitMQ
 
                 policy.Execute(() =>
                 {
-                    //TODO
-                     // _connectionFactory.Uri = new Uri("amqp://admin:Pass%40word123@localhost:5672");
-                     // _connectionFactory.UserName = "admin";
-                     // _connectionFactory.Password = "Pass@word123";
-                     //
-                     // ConnectionFactory factory = new ConnectionFactory();
-                     // factory.UserName = "admin";
-                     // factory.Password = "Pass@word123";
-                     // factory.VirtualHost = "/";
-                     // // factory.Protocol = Protocols.FromEnvironment();
-                     // factory.HostName = "localhost";
-                     // factory.Port = 5672;
-                    
-                    _logger.LogInformation($"RabbitMQ URI {_connectionFactory.Uri}");
                     _connection = _connectionFactory
                           .CreateConnection();
                 });

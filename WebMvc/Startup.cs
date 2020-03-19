@@ -230,11 +230,11 @@ namespace WebApplication
             return () => new HttpClientHandler
             {
                 ClientCertificateOptions = ClientCertificateOption.Manual,
-                ServerCertificateCustomValidationCallback =
-                    (httpRequestMessage, cert, cetChain, policyErrors) =>
-                    {
-                        return true;
-                    }
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    // (httpRequestMessage, cert, cetChain, policyErrors) =>
+                    // {
+                    //     return true;
+                    // }
             };
         }
 
@@ -261,8 +261,8 @@ namespace WebApplication
                 .AddOpenIdConnect(options =>
                 {
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.Authority = identityUrl.ToString();
-                    options.SignedOutRedirectUri = callBackUrl.ToString();
+                    options.Authority = identityUrl;
+                    options.SignedOutRedirectUri = callBackUrl;
                     options.ClientId = useLoadTest ? "mvctest" : "mvc";
                     options.ClientSecret = "secret";
                     options.ResponseType = useLoadTest ? "code id_token token" : "code id_token";

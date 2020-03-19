@@ -34,4 +34,9 @@ FROM build AS publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+COPY --from=build /WebMvc/Cert /app/Cert
+COPY --from=build /Identity.Api/Cert /usr/local/share/ca-certificates/
+RUN chmod 644 /usr/local/share/ca-certificates/identity-api.crt 
+RUN chmod 644 /usr/local/share/ca-certificates/RootCA.crt 
+RUN update-ca-certificates
 ENTRYPOINT ["dotnet", "WebMvc.dll"]

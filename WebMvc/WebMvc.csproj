@@ -112,9 +112,5 @@
       <_ContentIncludedByDefault Remove="wwwroot\wwwroot\_references.js" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Cert" />
-    </ItemGroup>
-
 
 </Project>

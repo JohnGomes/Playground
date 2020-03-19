@@ -78,3 +78,14 @@ ClientRedirectUris
 AspNetUsers  
 
 
+## SSL
+Generate self signed cert
+
+openssl.exe
+req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj "/C=US/CN=localhost" -config openssl.cfg
+x509 -outform pem -in RootCA.pem -out RootCA.crt 
+
+
+req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout identity-api.key -out identity-api.pem -subj "/C=US/CN=identity-api" -config openssl.cfg
+
+x509 -outform pem -in identity-api.pem -out identity-api.crt

@@ -13,12 +13,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/root/.dotnet/https/CatalogApi-eshop.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/CatalogApi-eshop.pfx
       - PurchaseUrl=Https://catalog-api-eshop
       - ASPNETCORE_HTTPS_PORT=44384
       - ASPNETCORE_URLS=https://+443;http://+80
       - CERTIFICATE_PATH=C:\tmp\
-      - IdentityUrl=http://identity-api
+      - IdentityUrl=https://c940c627.ngrok.io #https://identity-api #use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
+      - MvcClient=https://web-mvc/
+      - Serilog.SeqServerUrl=http://seq/
     ports:
       - "44384:443"
       - "44385:80"
@@ -117,14 +119,16 @@ services:
     environment:
       - ConnectionString=server=sqlserver-eshop;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORT=5105
+      - ASPNETCORE_HTTPS_PORT=54010
       - ASPNETCORE_URLS=https://+443;http://+80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/CatalogApi-eshop.pfx
       - CERTIFICATE_PATH=C:\tmp\
       - MvcClient=https://web-mvc/
+      - Serilog.SeqServerUrl=http://seq/
     ports:
-      - "5105:80" 
+      - "54010:443"
+      - "54011:80" 
 volumes:
   sqlserverdata:
     external: true
