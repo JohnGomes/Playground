@@ -89,3 +89,9 @@ x509 -outform pem -in RootCA.pem -out RootCA.crt
 req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout identity-api.key -out identity-api.pem -subj "/C=US/CN=identity-api" -config openssl.cfg
 
 x509 -outform pem -in identity-api.pem -out identity-api.crt
+
+## Sharing Localhost
+### NGrok
+ use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
+### localhost.run
+ssh -R 80:localhost:44375 basket-api@ssh.localhost.run

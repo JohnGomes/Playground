@@ -27,11 +27,16 @@
 
     <ItemGroup>
         <Protobuf Include="..\Basket.Api\Proto\basket.proto" GrpcServices="Client" />
+        <Protobuf Include="..\Catalog.Api\Proto\catalog.proto" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
         <!-- extends watching group to include *.js files -->
         <Watch Include="**\*.js" Exclude="node_modules\**\*;**\*.js.map;obj\**\*;bin\**\*" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\WebMvc\WebMvc.csproj" />
     </ItemGroup>
 
 

@@ -5,6 +5,7 @@ using Microsoft.eShopOnContainers.WebMVC.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.eShopOnContainers.WebMVC.Controllers
 {
@@ -15,12 +16,15 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
         private readonly IBasketService _basketSvc;
         private readonly ICatalogService _catalogSvc;
         private readonly IIdentityParser<ApplicationUser> _appUserParser;
+        private readonly ILogger<CartController> _logger;
 
-        public CartController(IBasketService basketSvc, ICatalogService catalogSvc, IIdentityParser<ApplicationUser> appUserParser)
+        public CartController(IBasketService basketSvc, ICatalogService catalogSvc,
+            IIdentityParser<ApplicationUser> appUserParser, ILogger<CartController> logger)
         {
             _basketSvc = basketSvc;
             _catalogSvc = catalogSvc;
             _appUserParser = appUserParser;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -61,7 +65,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
             return View();
         }
 
-        
+
         public async Task<IActionResult> AddToCart(CatalogItem productDetails)
         {
             try
@@ -71,15 +75,17 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
                     var user = _appUserParser.Parse(HttpContext.User);
                     await _basketSvc.AddItemToBasket(user, productDetails.Id);
                 }
+
                 return RedirectToAction("Index", "Catalog");
             }
             catch (Exception ex)
             {
-                // Catch error when Basket.api is in circuit-opened mode                 
+                // Catch error when Basket.api is in circuit-opened mode
+                _logger.LogError(ex, "Error Adding to Cart", productDetails);
                 HandleException(ex);
             }
 
-            return RedirectToAction("Index", "Catalog", new { errorMsg = ViewBag.BasketInoperativeMsg });
+            return RedirectToAction("Index", "Catalog", new {errorMsg = ViewBag.BasketInoperativeMsg});
         }
 
         private void HandleException(Exception ex)

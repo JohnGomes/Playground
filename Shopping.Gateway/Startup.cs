@@ -143,7 +143,8 @@ namespace Shopping.Gateway
         {
             var handler = new HttpClientHandler();
 
-            handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            handler.ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
                 // (httpRequestMessage, x509Certificate2, x509Chain, sslPolicyErrors) => true;
             return handler;
         }

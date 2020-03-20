@@ -17,15 +17,18 @@ services:
       - PurchaseUrl=Https://catalog-api-eshop
       - ASPNETCORE_HTTPS_PORT=44384
       - ASPNETCORE_URLS=https://+443;http://+80
-      - CERTIFICATE_PATH=C:\tmp\
-      - IdentityUrl=https://c940c627.ngrok.io #https://identity-api #use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
+      - IdentityUrl=https://017f3c9e.ngrok.io #https://identity-api #use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
       - MvcClient=https://web-mvc/
       - Serilog.SeqServerUrl=http://seq/
+      - CatalogUrlHC=http://catalog-api/hc
+      - OrderingUrlHC=http://ordering-api/hc
+      - IdentityUrlHC=http://identity-api/hc     #Local: Use ${ESHOP_PROD_EXTERNAL_DNS_NAME_OR_IP}, if using external IP or DNS name from browser.
+      - BasketUrlHC=http://basket-api/hc
+      - MarketingUrlHC=http://marketing-api/hc
+      - PaymentUrlHC=http://payment-api/hc
     ports:
       - "44384:443"
       - "44385:80"
-    volumes:
-      - C:/tmp/:/root/.dotnet/https
   catalog-api:
     container_name: catalog-api-eshop
     build:
@@ -74,6 +77,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/CatalogApi-eshop.pfx
       - CERTIFICATE_PATH=C:\tmp\
     ports:
+      - "44375:80"
       - "44376:443"
   rabbitmq:
     image: rabbitmq:3-management-alpine
