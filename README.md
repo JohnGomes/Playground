@@ -66,6 +66,8 @@ Playground/WebMvc/Dockerfile -- dockerfile to create WebMvc image
 
 ## Helpful Docs
 
+[Install Protainer](https://www.portainer.io/installation/)
+
 [.NET Core 2.1 and Docker — How to get Docker to recognize a local SSL certificate](https://mikewilliams.io/net-core-2-1-and-docker-how-to-get-docker-to-recognize-a-local-ssl-certificate-6e637e1e8800)  
 
 dotnet run --server.urls https://0.0.0.0:54010
@@ -79,16 +81,75 @@ AspNetUsers
 
 
 ## SSL
-Generate self signed cert
 
-openssl.exe
-req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.pem -subj "/C=US/CN=localhost" -config openssl.cfg
-x509 -outform pem -in RootCA.pem -out RootCA.crt 
+### Generate self signed cert /w OpenSSL
+- install [openssl](https://www.openssl.org/)
+- Run openssl.exe
+
+## Current Instructions
+```
+https://stackoverflow.com/questions/7580508/getting-chrome-to-accept-self-signed-localhost-certificate
+######################
+# Become a Certificate Authority
+######################
+
+# Generate private key
+openssl genrsa -des3 -out myCA.key 2048 -password pass:"idsrv3test"
+# Generate root certificate
+openssl req -x509 -new -nodes -key myCA.key -sha256 -days 1825 -out myCA.pem
+
+######################
+# Create CA-signed certs
+######################
+
+NAME=mydomain.com
+# Generate private key
+[[ -e $NAME.key ]] || openssl genrsa -out localhost.key 2048
+# Create certificate-signing request
+[[ -e $NAME.csr ]] || openssl req -new -key localhost.key -out localhost.csr
+# Create a config file for the extensions
+>$NAME.ext cat <<-EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = $NAME
+DNS.2 = bar.$NAME
+EOF
+# Create the signed certificate
+openssl x509 -req -in localhost.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out localhost.crt -days 1825 -sha256 -extfile localhost.ext
+```
+
+## Old Instructions
+```
+- Generate self signed 'localhost' for dotnetcore
+    - > req -x509 -nodes -days 1024 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -config localhost.conf -passin pass:Pass@word1
+- Generate crt
+    - > pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt
+
+- Generate pem and key for Root CA 'localhost'
+    - > req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootLocalhostCA.key -out RootLocalhostCA.pem -subj "/C=US/CN=localhost" -config openssl.cfg
+- Generate crt from pem
+    - > x509 -outform pem -in RootLocalhostCA.pem -out RootLocalhostCA.crt 
+
+- Generate pem and key for 'identity-api' domain
+    - > req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout identity-api.key -out identity-api.pem -subj "/C=US/CN=identity-api" -config openssl.cfg
+- Generate crt from pem
+    - > x509 -outform pem -in identity-api.pem -out identity-api.crt
 
 
-req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout identity-api.key -out identity-api.pem -subj "/C=US/CN=identity-api" -config openssl.cfg
+- Create Private Key
+    - > touch private-idsrv3test.pem
+    - > genrsa 2048 > private-idsrv3test.pem
+- Generate public pem and private pem for 'idsrv3test' domain
+    - > req -x509 -nodes -new -sha256 -days 1024 -new -key private-idsrv3test.pem -out public-idsrv3test.pem -subj "/C=US/CN=idsrv3test" 
+- Generate pfk from pem
+    - > pkcs12 -export -in public-idsrv3test.pem -inkey private-idsrv3test.pem -out idsrv3test.key -password pass:"idsrv3test"
+- Generate crt from pem
+    - > x509 -outform pem -in public-idsrv3test.pem -out idsrv3test.crt
+```
 
-x509 -outform pem -in identity-api.pem -out identity-api.crt
 
 ## Sharing Localhost
 ### NGrok

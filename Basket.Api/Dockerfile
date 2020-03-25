@@ -34,5 +34,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 COPY --from=build /Basket.Api/Proto /app/Proto
-COPY --from=build /Basket.Api/Cert /app/Cert
+COPY --from=build /Cert /app/Cert
 ENTRYPOINT ["dotnet", "Basket.Api.dll"]

@@ -12,9 +12,8 @@ services:
       - catalog-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
-      - CERTIFICATE_PATH=/app/Cert #C:/tmp
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/CatalogApi-eshop.pfx
       - PurchaseUrl=Https://catalog-api-eshop
       - ASPNETCORE_HTTPS_PORT=44384
       - ASPNETCORE_URLS=https://+443;http://+80
@@ -59,8 +58,8 @@ services:
       - PATH_BASE=/catalog-api
       - ASPNETCORE_HTTPS_PORT=44323
       - ASPNETCORE_URLS=https://+443;http://+80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/CatalogApi-eshop.pfx
       - CERTIFICATE_PATH=C:\tmp\
     ports:
       - "44322:80"
@@ -74,8 +73,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTPS_PORT=44376
       - ASPNETCORE_URLS=https://+443;http://+80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/CatalogApi-eshop.pfx
       - CERTIFICATE_PATH=C:\tmp\
     ports:
       - "44375:80"
@@ -87,6 +86,7 @@ services:
       - playground_default
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq-eshop
+      - C:/tmp/:/root/.dotnet/https
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -125,8 +125,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTPS_PORT=54010
       - ASPNETCORE_URLS=https://+443;http://+80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/CatalogApi-eshop.pfx
       - CERTIFICATE_PATH=C:\tmp\
       - MvcClient=https://web-mvc/
       - Serilog.SeqServerUrl=http://seq/

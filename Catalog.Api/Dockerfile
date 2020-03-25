@@ -36,5 +36,5 @@ COPY --from=publish /app .
 COPY --from=build /Catalog.Api/Proto /app/Proto
 COPY --from=build /Catalog.Api/Setup /app/Setup
 COPY --from=build /Catalog.Api/Pics /app/Pics
-COPY --from=build /Catalog.Api/Cert /app/Cert
+COPY --from=build /Cert /app/Cert
 ENTRYPOINT ["dotnet", "Catalog.Api.dll"]
