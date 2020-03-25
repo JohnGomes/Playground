@@ -96,7 +96,7 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Configuration
                 new Client
                 {
                     ClientId = "mvc",
-                    ClientName = "MVC Client XXX",
+                    ClientName = "MVC Client",
                     ClientSecrets = new List<Secret>
                     {
                         new Secret("secret".Sha256())

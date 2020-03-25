@@ -142,6 +142,13 @@ openssl x509 -req -in localhost.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial
 - Generate crt from pem
     - > x509 -outform pem -in identity-api.pem -out identity-api.crt
 
+- Generate key
+    - > genrsa -out identity-api2.key 2048
+- Create certificate-signing request
+    - >  req -new -key identity-api2.key -out identity-api2.csr
+- Generate crt using RootCA
+    - > x509 -req -in identity-api2.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out identity-api2.crt -days 1825 -sha256
+
 
 - Create Private PEM
     - > touch private-idsrv3test.pem

@@ -18,7 +18,7 @@ services:
       - PurchaseUrl=Https://catalog-api-eshop
       - ASPNETCORE_HTTPS_PORT=44384
       - ASPNETCORE_URLS=https://+443;http://+80
-      - IdentityUrl=https://017f3c9e.ngrok.io #https://identity-api #use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
+      - IdentityUrl=https://9a3660da.ngrok.io #https://identity-api #use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
       - MvcClient=https://web-mvc/
       - Serilog.SeqServerUrl=http://seq/
       - CatalogUrlHC=http://catalog-api/hc
@@ -46,7 +46,7 @@ services:
       - PicBaseUrl=https://localhost:44323/api/v1/catalog/items/[0]/pic/  #Local: You need to open your local dev-machine firewall at range 5100-5110.
       - EventBusConnection=rabbitmq-eshop
       - EventBusUserName=admin
-      - EventBusPassword=Pass@word123
+      - EventBusPassword=Pass@word1
       - AzureStorageAccountName=
       - AzureStorageAccountKey=
       - UseCustomizationData=True
@@ -128,7 +128,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
       - CERTIFICATE_PATH=/app/Cert #C:/tmp
-      - MvcClient=https://web-mvc/
+      - MvcClient=https://localhost:44384
       - Serilog.SeqServerUrl=http://seq/
     ports:
       - "54010:443"

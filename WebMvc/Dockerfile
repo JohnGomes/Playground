@@ -37,6 +37,7 @@ COPY --from=publish /app .
 COPY --from=build /Cert /app/Cert
 COPY --from=build /Cert /usr/local/share/ca-certificates/
 RUN chmod 644 /usr/local/share/ca-certificates/identity-api.crt 
+RUN chmod 644 /usr/local/share/ca-certificates/identity-api2.crt 
 RUN chmod 644 /usr/local/share/ca-certificates/RootLocalhostCA.crt 
 RUN update-ca-certificates
 ENTRYPOINT ["dotnet", "WebMvc.dll"]

@@ -21,7 +21,7 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Data
 
             // clientUrls.Add("Mvc", configuration.GetValue<string>("MvcClient"));
             //TODO
-            clientUrls.Add("Mvc", "https://localhost:5001");
+            clientUrls.Add("Mvc", configuration.GetValue<string>("SpaClient"));
             clientUrls.Add("Spa", configuration.GetValue<string>("SpaClient"));
             clientUrls.Add("Xamarin", configuration.GetValue<string>("XamarinCallback"));
             clientUrls.Add("LocationsApi", configuration.GetValue<string>("LocationApiClient"));
