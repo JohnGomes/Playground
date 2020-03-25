@@ -61,7 +61,7 @@ services:
       - ASPNETCORE_URLS=https://+443;http://+80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
-      - CERTIFICATE_PATH=C:\tmp\
+      - CERTIFICATE_PATH=/app/Cert #C:/tmp
     ports:
       - "44322:80"
       - "44323:443"
@@ -76,7 +76,7 @@ services:
       - ASPNETCORE_URLS=https://+443;http://+80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
-      - CERTIFICATE_PATH=C:\tmp\
+      - CERTIFICATE_PATH=/app/Cert #C:/tmp
     ports:
       - "44375:80"
       - "44376:443"
@@ -88,11 +88,11 @@ services:
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq-eshop
     ports:
-      - "15672:15672"
+      - "15672:15672" #Http
       - "5672:5672"
     environment:
       - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=Pass@word123
+      - RABBITMQ_DEFAULT_PASS=Pass@word1
   sqlserver:
     image: microsoft/mssql-server-linux:latest
     container_name: sqlserver-eshop
@@ -127,7 +127,7 @@ services:
       - ASPNETCORE_URLS=https://+443;http://+80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
-      - CERTIFICATE_PATH=C:\tmp\
+      - CERTIFICATE_PATH=/app/Cert #C:/tmp
       - MvcClient=https://web-mvc/
       - Serilog.SeqServerUrl=http://seq/
     ports:

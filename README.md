@@ -68,19 +68,23 @@ Playground/WebMvc/Dockerfile -- dockerfile to create WebMvc image
 
 [Install Protainer](https://www.portainer.io/installation/)
 
-[.NET Core 2.1 and Docker — How to get Docker to recognize a local SSL certificate](https://mikewilliams.io/net-core-2-1-and-docker-how-to-get-docker-to-recognize-a-local-ssl-certificate-6e637e1e8800)  
-
 dotnet run --server.urls https://0.0.0.0:54010
 dotnet run --server.urls https://0.0.0.0:44384
 
-## Noteworthy Db Tables
 
+## SQL
+> "server=localhost,1434;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;"
+### Noteworthy Db Tables
 Clients  
 ClientRedirectUris  
 AspNetUsers  
 
 
 ## SSL
+
+
+[.NET Core 2.1 and Docker — How to get Docker to recognize a local SSL certificate](https://mikewilliams.io/net-core-2-1-and-docker-how-to-get-docker-to-recognize-a-local-ssl-certificate-6e637e1e8800)  
+
 
 ### Generate self signed cert /w OpenSSL
 - install [openssl](https://www.openssl.org/)
@@ -139,15 +143,15 @@ openssl x509 -req -in localhost.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial
     - > x509 -outform pem -in identity-api.pem -out identity-api.crt
 
 
-- Create Private Key
+- Create Private PEM
     - > touch private-idsrv3test.pem
     - > genrsa 2048 > private-idsrv3test.pem
-- Generate public pem and private pem for 'idsrv3test' domain
-    - > req -x509 -nodes -new -sha256 -days 1024 -new -key private-idsrv3test.pem -out public-idsrv3test.pem -subj "/C=US/CN=idsrv3test" 
+    - Copy Generated text into file
+- Generate public pem from private pem for 'idsrv3test' domain
+    - > req -x509 -days 1024 -new -key private-idsrv3test.pem -out public-idsrv3test.pem -subj "/C=US/CN=idsrv3test" 
 - Generate pfk from pem
-    - > pkcs12 -export -in public-idsrv3test.pem -inkey private-idsrv3test.pem -out idsrv3test.key -password pass:"idsrv3test"
-- Generate crt from pem
-    - > x509 -outform pem -in public-idsrv3test.pem -out idsrv3test.crt
+    - > pkcs12 -export -in public-idsrv3test.pem -inkey private-idsrv3test.pem -out idsrv3test.pfx -passin pass:"idsrv3test"
+
 ```
 
 

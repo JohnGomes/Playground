@@ -6,4 +6,6 @@
 - ✓ Get Identity server in place
 - ✓ Get Logger working correctly
     - ✓ Use [Seq](https://datalust.co/seq)
+- Enable Mac Development
+- Use Seq with RabbitMQ
 - Add Elasticsearch
