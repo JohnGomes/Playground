@@ -1,4 +1,4 @@
-﻿namespace Microsoft.eShopOnContainers.Services.Catalog.API.Model
+﻿namespace Catalog.Api.Model
 {
     public class CatalogBrand
     {

@@ -4,7 +4,7 @@ namespace Shopping.Gateway.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     [Route("")]
-    public class HomeGatewayController : Controller
+    public class HomeController : Controller
     {
         // GET
         [HttpGet]

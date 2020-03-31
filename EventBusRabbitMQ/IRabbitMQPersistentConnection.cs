@@ -1,7 +1,7 @@
-﻿using RabbitMQ.Client;
-using System;
+﻿using System;
+using RabbitMQ.Client;
 
-namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBusRabbitMQ
+namespace Playground.EventBusRabbitMQ
 {
     public interface IRabbitMQPersistentConnection
         : IDisposable

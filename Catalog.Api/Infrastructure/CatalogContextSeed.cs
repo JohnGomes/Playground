@@ -1,4 +1,6 @@
-﻿namespace Microsoft.eShopOnContainers.Services.Catalog.API.Infrastructure
+﻿using Catalog.Api.Model;
+
+namespace Microsoft.eShopOnContainers.Services.Catalog.API.Infrastructure
 {
     using Extensions.Logging;
     using global::Catalog.API.Extensions;

@@ -1,6 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Catalog.API.Grpc;
+using Catalog.Api.Grpc;
 using global::Catalog.API.Infrastructure.Filters;
 using global::Catalog.API.IntegrationEvents;
 using HealthChecks.UI.Client;
@@ -14,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.eShopOnContainers.BuildingBlocks.EventBus;
 using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Abstractions;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBusRabbitMQ;
 using Microsoft.eShopOnContainers.BuildingBlocks.EventBusServiceBus;
 using Microsoft.eShopOnContainers.BuildingBlocks.IntegrationEventLogEF;
 using Microsoft.eShopOnContainers.BuildingBlocks.IntegrationEventLogEF.Services;
@@ -34,6 +33,7 @@ using System.IO;
 using System.Reflection;
 using Microsoft.eShopOnContainers.Services.Catalog.API;
 using Microsoft.eShopOnContainers.WebMVC.Services;
+using Playground.EventBusRabbitMQ;
 
 namespace Catalog.Api
 {
@@ -106,7 +106,7 @@ namespace Catalog.Api
                         }
                     }
                 });
-                endpoints.MapGrpcService<CatalogService>();
+                endpoints.MapGrpcService<CatalogGrpcService>();
                 endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
                 {
                     Predicate = _ => true,

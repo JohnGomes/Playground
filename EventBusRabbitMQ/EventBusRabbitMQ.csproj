@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>Microsoft.eShopOnContainers.BuildingBlocks.EventBusRabbitMQ</RootNamespace>
+    <RootNamespace>Playground.EventBusRabbitMQ</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

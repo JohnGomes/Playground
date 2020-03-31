@@ -24,9 +24,11 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
             _httpClient = httpClient;
             _settings = settings;
             _logger = logger;
-
-            // _remoteServiceBaseUrl = $"{_settings.Value.PurchaseUrl}/c/api/v1/catalog/";
-            _remoteServiceBaseUrl = $"{_settings.Value.PurchaseUrl}/api/v1/catalog/";
+            
+            //_remoteServiceBaseUrl = $"{_settings.Value.PurchaseUrl}/c/api/v1/catalog/";
+            _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/api/v1/catalog/";
+            //_remoteServiceBaseUrl = $"google.com/api/v1/catalog/";
+            
         }
 
         public async Task<Catalog> GetCatalogItems(int page, int take, int? brand, int? type)
@@ -34,6 +36,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
             var uri = API.Catalog.GetAllCatalogItems(_remoteServiceBaseUrl, page, take, brand, type);
 
             var responseString = await _httpClient.GetStringAsync(uri);
+            _logger.Log(LogLevel.Information,uri);
 
             var catalog = JsonConvert.DeserializeObject<Catalog>(responseString);
 

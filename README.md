@@ -163,7 +163,10 @@ openssl x509 -req -in localhost.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial
 
 
 ## Sharing Localhost
+This is primarily used to avoid ssl cert issues
 ### NGrok
  use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
 ### localhost.run
 ssh -R 80:localhost:44375 basket-api@ssh.localhost.run
+
+docker run --rm --name redis-cli -it goodsmileduck/redis-cli -h hostname -p 6379 ping

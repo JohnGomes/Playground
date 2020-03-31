@@ -1,30 +1,20 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Net.Client;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Shopping.Gateway.Services
 {
     public static class GrpcCallerService
     {
-        public static async Task<TResponse> CallService<TResponse>(string urlGrpc, Func<GrpcChannel, Task<TResponse>> func)
+        public static async Task<TResponse> CallService<TResponse>(string urlGrpc, Func<GrpcChannel, Task<TResponse>> func, ILoggerFactory loggerFactory)
         {
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
+            var channel = CreateInsecureChannel(urlGrpc, loggerFactory);
 
-            var channel = GrpcChannel.ForAddress(urlGrpc);
-
-            /*
-            using var httpClientHandler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; }
-            };
-
-            */
-
-
-            Log.Information("Creating grpc client base address urlGrpc ={@urlGrpc}, BaseAddress={@BaseAddress} ", urlGrpc, channel.Target);
+            Log.Information("Creating grpc client base address urlGrpc {@urlGrpc}, BaseAddress {@BaseAddress} ", urlGrpc, channel.Target);
 
             try
             {
@@ -40,39 +30,22 @@ namespace Shopping.Gateway.Services
                 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", false);
                 AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", false);
             }
-
-
         }
 
-        public static async Task CallService(string urlGrpc, Func<GrpcChannel, Task> func)
+        private static GrpcChannel CreateInsecureChannel(string urlGrpc, ILoggerFactory loggerFactory)
         {
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
 
-            /*
-            using var httpClientHandler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; }
-            };
-            */
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = httpClientHandler.ServerCertificateCustomValidationCallback;
+            httpClientHandler.ServerCertificateCustomValidationCallback = (o, c, ch, er) => true;
 
-            var channel = GrpcChannel.ForAddress(urlGrpc);
-
-            Log.Debug("Creating grpc client base address {@httpClient.BaseAddress} ", channel.Target);
-
-            try
+            return GrpcChannel.ForAddress(urlGrpc, new GrpcChannelOptions
             {
-                await func(channel);
-            }
-            catch (RpcException e)
-            {
-                Log.Error("Error calling via grpc: {Status} - {Message}", e.Status, e.Message);
-            }
-            finally
-            {
-                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", false);
-                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", false);
-            }
+                HttpClient = new HttpClient(httpClientHandler), 
+                LoggerFactory = loggerFactory
+            });
         }
     }
 }

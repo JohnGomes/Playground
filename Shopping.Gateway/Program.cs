@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Shopping.Gateway
 {
@@ -17,6 +18,7 @@ namespace Shopping.Gateway
         public static void Main(string[] args)
         {
             var configuration = GetConfiguration();
+            Log.Logger = CreateSerilogLogger(configuration);
             CreateHostBuilder(configuration,args).Build().Run();
         }
 
@@ -25,7 +27,7 @@ namespace Shopping.Gateway
             return Host.CreateDefaultBuilder(args)
                 .ConfigureLogging(logging =>
                 {
-                    logging.AddFilter("Grpc", LogLevel.Debug);
+                    logging.AddFilter("Grpc", LogLevel.Information);
                     logging.AddConsole(o => o.IncludeScopes = true);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -39,6 +41,7 @@ namespace Shopping.Gateway
                         // o.Listen(IPAddress.Any, ports.grpcPort, options => { options.Protocols = HttpProtocols.Http2; });
                     });
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
                 });
         }
         
@@ -62,6 +65,21 @@ namespace Shopping.Gateway
             // }
 
             return builder.Build();
+        }
+        
+        private static Serilog.ILogger CreateSerilogLogger(IConfiguration configuration)
+        {
+            var seqServerUrl = configuration["Serilog:SeqServerUrl"];
+            var logstashUrl = configuration["Serilog:LogstashgUrl"];
+            return new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.WithProperty("ApplicationContext", "Shopping.Gateway")
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Seq(string.IsNullOrWhiteSpace(seqServerUrl) ? "http://seq" : seqServerUrl)
+                .WriteTo.Http(string.IsNullOrWhiteSpace(logstashUrl) ? "http://localhost:8080" : logstashUrl)
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
         }
         
         private static (int httpPort, int grpcPort) GetDefinedPorts(IConfiguration config)

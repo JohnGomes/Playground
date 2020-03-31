@@ -1,22 +1,39 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Basket.Api.Configuration;
+using Basket.Api.Controllers;
 using Basket.Api.Grpc;
+using Basket.Api.Infrastructure.Filters;
+using Basket.Api.Infrastructure.Repositories;
+using Basket.Api.Middlewares;
+using Basket.Api.Model;
+using Basket.Api.Services;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.eShopOnContainers.BuildingBlocks.EventBus;
+using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Playground.EventBusRabbitMQ;
+using RabbitMQ.Client;
+using StackExchange.Redis;
 
 namespace Basket.Api
 {
@@ -30,11 +47,23 @@ namespace Basket.Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public  void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.AddGrpc(o=>o.EnableDetailedErrors = true);
             services.AddCustomHealthCheck(Configuration);
+            
+            // RegisterAppInsights(services);
+
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add(typeof(HttpGlobalExceptionFilter));
+                    options.Filters.Add(typeof(ValidateModelStateFilter));
+
+                }) // Added for functional tests
+                .AddApplicationPart(typeof(BasketController).Assembly);
+                //.AddNewtonsoftJson();
+
 
             
             services.AddSwaggerGen(options =>
@@ -64,10 +93,90 @@ namespace Basket.Api
                 //         }
                 //     }
                 // });
-                //
-                // options.OperationFilter<AuthorizeCheckOperationFilter>();
+                
+                //options.OperationFilter<AuthorizeCheckOperationFilter>();
             });
+            
+            ConfigureAuthService(services);
+            
+            // services.AddCustomHealthCheck(Configuration);
+            //
+            services.Configure<BasketSettings>(Configuration);
+            //
+            // //By connecting here we are making sure that our service
+            // //cannot start until redis is ready. This might slow down startup,
+            // //but given that there is a delay on resolving the ip address
+            // //and then creating the connection it seems reasonable to move
+            // //that cost to startup instead of having the first request pay the
+            // //penalty.
+            services.AddSingleton<ConnectionMultiplexer>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<BasketSettings>>().Value;
+                var configuration = ConfigurationOptions.Parse(settings.ConnectionString, true);
+            
+                configuration.ResolveDns = true;
+            
+                return ConnectionMultiplexer.Connect(configuration);
+            });
+            //
+            //
+            // if (Configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            // {
+            //     services.AddSingleton<IServiceBusPersisterConnection>(sp =>
+            //     {
+            //         var logger = sp.GetRequiredService<ILogger<DefaultServiceBusPersisterConnection>>();
+            //
+            //         var serviceBusConnectionString = Configuration["EventBusConnection"];
+            //         var serviceBusConnection = new ServiceBusConnectionStringBuilder(serviceBusConnectionString);
+            //
+            //         return new DefaultServiceBusPersisterConnection(serviceBusConnection, logger);
+            //     });
+            // }
+            // else
+            // {
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+            
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBusConnection"],
+                    DispatchConsumersAsync = true
+                };
+
+                factory.UserName = Configuration["EventBusUserName"] ?? factory.UserName;
+                factory.Password = Configuration["EventBusPassword"] ?? factory.Password;
+                var retryCount = int.TryParse(Configuration["EventBusRetryCount"], out var i) ? i : 5;
+
+            
+                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
+            });
+            // }
+            //
+             RegisterEventBus(services);
+            //
+            //
+            // services.AddCors(options =>
+            // {
+            //     options.AddPolicy("CorsPolicy",
+            //         builder => builder
+            //         .SetIsOriginAllowed((host) => true)
+            //         .AllowAnyMethod()
+            //         .AllowAnyHeader()
+            //         .AllowCredentials());
+            // });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IBasketRepository, RedisBasketRepository>();
+            services.AddTransient<IIdentityService, IdentityService>();
+            
+            services.AddOptions();
+            
+            // var container = new ContainerBuilder();
+            // container.Populate(services);
+            //
+            // return new AutofacServiceProvider(container.Build());
         }
+        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -91,7 +200,12 @@ namespace Basket.Api
                     // setup.OAuthAppName("Basket Swagger UI");
                 });
 
-            // app.UseAuthorization();
+            // app.UseRouting();
+            ConfigureAuth(app);
+
+            // app.UseStaticFiles();
+
+            // app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
@@ -110,6 +224,94 @@ namespace Basket.Api
                 });
             });
         }
+        
+        // private void RegisterAppInsights(IServiceCollection services)
+        // {
+        //     services.AddApplicationInsightsTelemetry(Configuration);
+        //     services.AddApplicationInsightsKubernetesEnricher();
+        // }
+        
+        private void ConfigureAuthService(IServiceCollection services)
+        {
+            // prevent from mapping "sub" claim to nameidentifier.
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = identityUrl;
+                options.RequireHttpsMetadata = false;
+                options.Audience = "basket";
+            });
+        }
+
+        protected virtual void ConfigureAuth(IApplicationBuilder app)
+        {
+            if (Configuration.GetValue<bool>("UseLoadTest"))
+            {
+                app.UseMiddleware<ByPassAuthMiddleware>();
+            }
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+        }
+        
+                private void RegisterEventBus(IServiceCollection services)
+        {
+             var subscriptionClientName = Configuration["SubscriptionClientName"];
+        //
+        //     if (Configuration.GetValue<bool>("AzureServiceBusEnabled"))
+        //     {
+        //         services.AddSingleton<IEventBus, EventBusServiceBus>(sp =>
+        //         {
+        //             var serviceBusPersisterConnection = sp.GetRequiredService<IServiceBusPersisterConnection>();
+        //             var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+        //             var logger = sp.GetRequiredService<ILogger<EventBusServiceBus>>();
+        //             var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+        //
+        //             return new EventBusServiceBus(serviceBusPersisterConnection, logger,
+        //                 eventBusSubcriptionsManager, subscriptionClientName, iLifetimeScope);
+        //         });
+        //     }
+        //     else
+        //     {
+        services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+        {
+            var rabbitMqPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+            var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+            var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+            var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+        
+            var retryCount = 5;
+            if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
+            {
+                retryCount = int.Parse(Configuration["EventBusRetryCount"]);
+            }
+        
+            return new EventBusRabbitMQ(rabbitMqPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
+        });
+        //     }
+        //
+        services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+        //
+        //     services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
+        //     services.AddTransient<OrderStartedIntegrationEventHandler>();
+         }
+        //
+        // private void ConfigureEventBus(IApplicationBuilder app)
+        // {
+        //     var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+        //
+        //     eventBus.Subscribe<ProductPriceChangedIntegrationEvent, ProductPriceChangedIntegrationEventHandler>();
+        //     eventBus.Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
+        // }
+
 
         private static RequestDelegate GetProtoBuf(IWebHostEnvironment env)
         {

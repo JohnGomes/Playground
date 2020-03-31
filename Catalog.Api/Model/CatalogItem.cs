@@ -1,7 +1,8 @@
-﻿using Catalog.API.Infrastructure.Exceptions;
-using System;
+﻿using System;
+using Catalog.API.Infrastructure.Exceptions;
+using Microsoft.eShopOnContainers.Services.Catalog.API.Model;
 
-namespace Microsoft.eShopOnContainers.Services.Catalog.API.Model
+namespace Catalog.Api.Model
 {
     public class CatalogItem
     {

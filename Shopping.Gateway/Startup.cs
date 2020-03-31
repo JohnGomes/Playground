@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Basket.Api.Middlewares;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -47,13 +50,15 @@ namespace Shopping.Gateway
                 // .AddUrlGroup(new Uri(Configuration["LocationUrlHC"]), name: "locationapi-check", tags: new string[] { "locationapi" });
             
             services.AddControllers().AddNewtonsoftJson();
-            services.AddMvc();
+            // services.AddMvc();
+            services.AddCustomMvc(Configuration);
+            services.AddCustomAuthentication(Configuration);
             services.AddApplicationServices(Env, Configuration);
-            services.Configure<UrlsConfig>(Configuration.GetSection("urls"));
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Shopping Gateway", Version = "v1"});
-            });
+            // services.Configure<UrlsConfig>(Configuration.GetSection("urls"));
+            // services.AddSwaggerGen(c =>
+            // {
+            //     c.SwaggerDoc("v1", new OpenApiInfo {Title = "Shopping Gateway", Version = "v1"});
+            // });
         }
 
 
@@ -69,7 +74,7 @@ namespace Shopping.Gateway
             // app.UseStaticFiles();
             app.UseSwagger().UseSwaggerUI(c =>
             {
-                c.DocumentTitle = "Basket.Api Swagger";
+                c.DocumentTitle = "Shopping Gateway Swagger";
                 c.SwaggerEndpoint(
                     $"{(!string.IsNullOrEmpty(pathBase) ? pathBase : string.Empty)}/swagger/v1/swagger.json",
                     "Shopping Gateway V1");
@@ -85,7 +90,7 @@ namespace Shopping.Gateway
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -106,6 +111,80 @@ namespace Shopping.Gateway
 
     public static class ServiceCollectionExtensions
     {
+        public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
+            var identityUrl = configuration.GetValue<string>("urls:identity");
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            })
+            .AddJwtBearer(options =>
+            {
+                options.Authority = identityUrl;
+                options.RequireHttpsMetadata = false;
+                options.Audience = "webshoppingagg";
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddCustomMvc(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddOptions();
+            services.Configure<UrlsConfig>(configuration.GetSection("urls"));
+
+            services.AddControllers()
+                .AddNewtonsoftJson();
+
+            services.AddSwaggerGen(options =>
+            {
+                //options.DescribeAllEnumsAsStrings();
+
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Shopping Gateway",
+                    Version = "v1",
+                    Description = "Shopping Aggregator for Web Clients"
+                });
+
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows()
+                    {
+                        Implicit = new OpenApiOAuthFlow()
+                        {
+                            AuthorizationUrl = new Uri($"{configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize"),
+                            TokenUrl = new Uri($"{configuration.GetValue<string>("IdentityUrlExternal")}/connect/token"),
+
+                            Scopes = new Dictionary<string, string>()
+                            {
+                                { "webshoppingagg", "Shopping Aggregator for Web Clients" }
+                            }
+                        }
+                    }
+                });
+
+                options.OperationFilter<AuthorizeCheckOperationFilter>();
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                    .SetIsOriginAllowed((host) => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
+            return services;
+        }
+        
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IHostEnvironment env,
             IConfiguration configuration)
         {
@@ -114,13 +193,22 @@ namespace Shopping.Gateway
                 services.AddHttpClient<IBasketApiClient, BasketApiClient>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
                 
+                services.AddHttpClient<IBasketService, BasketService>()
+                    .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
+                
                 services.AddHttpClient<IBasketGrpcClient, BasketGrpcClient>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
+                
+                services.AddHttpClient<ICatalogGrpcService, CatalogGrpcService>()
+                    .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
+                    //.AddDevspacesSupport();
             }
             else
             {
                 services.AddHttpClient<IBasketApiClient, BasketApiClient>();
+                services.AddHttpClient<IBasketService, BasketService>();
                 services.AddHttpClient<IBasketGrpcClient, BasketGrpcClient>();
+                services.AddHttpClient<ICatalogGrpcService, CatalogGrpcService>();
             }
 
             //TODO

@@ -11,8 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+ using Catalog.Api.Model;
 
-namespace Microsoft.eShopOnContainers.Services.Catalog.API.Controllers
+ namespace Microsoft.eShopOnContainers.Services.Catalog.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]

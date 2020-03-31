@@ -45,23 +45,6 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
             
             ViewBag.BasketInoperativeMsg = errorMsg;
 
-
-            // var vm = new IndexViewModel()
-            // {
-            //     CatalogItems = new List<CatalogItem> {new CatalogItem()},
-            //     Brands = new List<SelectListItem>(),
-            //     Types = new List<SelectListItem>(),
-            //     BrandFilterApplied = BrandFilterApplied ?? 0,
-            //     TypesFilterApplied = TypesFilterApplied ?? 0,
-            //     PaginationInfo = new PaginationInfo()
-            //     {
-            //         ActualPage = page ?? 0,
-            //         ItemsPerPage = 1,
-            //         TotalItems = 1,
-            //         TotalPages = (int) Math.Ceiling(((decimal) 1 / 1))
-            //     }
-            // };
-
             return View(vm);
         }
     }

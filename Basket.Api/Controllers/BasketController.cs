@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Basket.Api.Controllers
 {
     
     [Route("api/v1/[controller]")]
-    [Authorize]
+    // [Authorize]
     [ApiController]
     public class BasketController : ControllerBase
     {
@@ -36,6 +37,15 @@ namespace Basket.Api.Controllers
             _repository = repository;
             _identityService = identityService;
             _eventBus = eventBus;
+        }
+        
+        [HttpGet()]
+        [ProducesResponseType(typeof(CustomerBasket), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<CustomerBasket>>> GetBasketsAsync(string id)
+        {
+            var basket = await _repository.GetBasketsAsync();
+
+            return Ok(basket);
         }
 
         [HttpGet("{id}")]

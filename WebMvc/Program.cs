@@ -58,14 +58,12 @@ namespace Microsoft.eShopContainers.WebMVC
                 .ReadFrom.Configuration(configuration)
                 .Enrich.WithProperty("ApplicationContext", AppName)
                 .Enrich.FromLogContext()
-                .WriteTo.Console();
-            if (!string.IsNullOrWhiteSpace(seqServerUrl)) {
-                cfg.WriteTo.Seq(seqServerUrl);
-            }
-            if (!string.IsNullOrWhiteSpace(logstashUrl)) {
-                cfg.WriteTo.Http(logstashUrl);
-            }
-            return cfg.CreateLogger();
+                .WriteTo.Console()
+                .WriteTo.Seq(string.IsNullOrWhiteSpace(seqServerUrl) ? "http://seq" : seqServerUrl)
+                .WriteTo.Http(string.IsNullOrWhiteSpace(logstashUrl) ? "http://localhost:8080" : logstashUrl)
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+            return cfg;
         }
 
         private static IConfiguration GetConfiguration()

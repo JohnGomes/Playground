@@ -27,8 +27,8 @@ namespace Shopping.Gateway.Services
 
         public async Task<HelloReply> SayHello()
         {
-            return await GrpcService.CallService(_urls.GrpcBasket,
-                async channel => await new Basket.BasketClient(channel)
+            return await GrpcService.CallService<HelloReply>(_urls.GrpcBasket,
+                async channel => await new GrpcBasket.Basket.BasketClient(channel)
                     .SayHelloAsync(new HelloRequest {Name = "Shopping Gateway"}));
         }
 
@@ -37,7 +37,7 @@ namespace Shopping.Gateway.Services
         {
             return await GrpcService.CallService(_urls.GrpcBasket, async channel =>
             {
-                 var client = new Basket.BasketClient(channel);
+                 var client = new GrpcBasket.Basket.BasketClient(channel);
 
                 var response = await client.GetCatalogItemAsync(new CatalogItemRequest{Id = id});
 

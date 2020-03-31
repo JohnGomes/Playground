@@ -18,15 +18,19 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
         private readonly ILogger<BasketService> _logger;
         private readonly string _basketByPassUrl;
         private readonly string _purchaseUrl;
+        private readonly string _catalogUrl;
+        private readonly string _basketUrl;
 
         public BasketService(HttpClient httpClient, IOptions<AppSettings> settings, ILogger<BasketService> logger)
         {
             _apiClient = httpClient;
             _settings = settings;
             _logger =logger;
-
-            _basketByPassUrl = $"{_settings.Value.PurchaseUrl}/b/api/v1/basket";
-            _purchaseUrl = $"{_settings.Value.PurchaseUrl}/api/v1";
+            //TODO
+            _basketByPassUrl = $"{_settings.Value.BasketUrl}/api/v1/basket";
+            _purchaseUrl = $"{_settings.Value.PurchaseUrl}/api/v1/shopping";
+            _catalogUrl = $"{_settings.Value.CatalogUrl}/api/v1";
+            _basketUrl = $"{_settings.Value.BasketUrl}/api/v1";
         }
 
         public async Task<Basket> GetBasket(ApplicationUser user)
