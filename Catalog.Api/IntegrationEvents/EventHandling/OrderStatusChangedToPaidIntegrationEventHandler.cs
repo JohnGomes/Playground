@@ -1,8 +1,8 @@
 ﻿using Catalog.Api;
+using EventBus.Abstractions;
 
 namespace Microsoft.eShopOnContainers.Services.Catalog.API.IntegrationEvents.EventHandling
 {
-    using BuildingBlocks.EventBus.Abstractions;
     using System.Threading.Tasks;
     using Infrastructure;
     using Microsoft.eShopOnContainers.Services.Catalog.API.IntegrationEvents.Events;

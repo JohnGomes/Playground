@@ -33,7 +33,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
             _basketUrl = $"{_settings.Value.BasketUrl}/api/v1";
         }
 
-        public async Task<Basket> GetBasket(ApplicationUser user)
+        public async Task<ViewModels.Basket> GetBasket(ApplicationUser user)
         {
             var uri = API.Basket.GetBasket(_basketByPassUrl, user.Id);
             _logger.LogDebug("[GetBasket] -> Calling {Uri} to get the basket", uri);
@@ -41,11 +41,11 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
             _logger.LogDebug("[GetBasket] -> response code {StatusCode}", response.StatusCode);
             var responseString = await response.Content.ReadAsStringAsync();
             return string.IsNullOrEmpty(responseString) ?
-                new Basket() { BuyerId = user.Id } :
-                JsonConvert.DeserializeObject<Basket>(responseString);
+                new ViewModels.Basket() { BuyerId = user.Id } :
+                JsonConvert.DeserializeObject<ViewModels.Basket>(responseString);
         }
 
-        public async Task<Basket> UpdateBasket(Basket basket)
+        public async Task<ViewModels.Basket> UpdateBasket(ViewModels.Basket basket)
         {
             var uri = API.Basket.UpdateBasket(_basketByPassUrl);
 
@@ -70,7 +70,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task<Basket> SetQuantities(ApplicationUser user, Dictionary<string, int> quantities)
+        public async Task<ViewModels.Basket> SetQuantities(ApplicationUser user, Dictionary<string, int> quantities)
         {
             var uri = API.Purchase.UpdateBasketItem(_purchaseUrl);
 
@@ -92,7 +92,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<Basket>(jsonResponse);
+            return JsonConvert.DeserializeObject<ViewModels.Basket>(jsonResponse);
         }
 
         public async Task<Order> GetOrderDraft(string basketId)

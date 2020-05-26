@@ -16,7 +16,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(ApplicationUser user)
         {
-            var vm = new Basket();
+            var vm = new ViewModels.Basket();
             try
             {
                 vm = await GetItemsAsync(user);
@@ -30,6 +30,6 @@ namespace Microsoft.eShopOnContainers.WebMVC.ViewComponents
             return View(vm);
         }
         
-        private Task<Basket> GetItemsAsync(ApplicationUser user) => _cartSvc.GetBasket(user);
+        private Task<ViewModels.Basket> GetItemsAsync(ApplicationUser user) => _cartSvc.GetBasket(user);
     }
 }

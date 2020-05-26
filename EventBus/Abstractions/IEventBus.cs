@@ -1,7 +1,6 @@
-﻿using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Events;
-using System;
+﻿using EventBus.Events;
 
-namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Abstractions
+namespace EventBus.Abstractions
 {
     public interface IEventBus
     {

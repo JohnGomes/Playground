@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Events;
 using System.Linq;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using EventBus.Events;
 using Microsoft.Extensions.Logging;
 using Microsoft.eShopOnContainers.BuildingBlocks.IntegrationEventLogEF.Services;
 

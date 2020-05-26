@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Abstractions;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Events;
 using Microsoft.eShopOnContainers.BuildingBlocks.IntegrationEventLogEF.Services;
 using Microsoft.eShopOnContainers.BuildingBlocks.IntegrationEventLogEF.Utilities;
 using Microsoft.eShopOnContainers.Services.Catalog.API;
@@ -12,6 +10,8 @@ using System;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Catalog.Api;
+using EventBus.Abstractions;
+using EventBus.Events;
 
 namespace Catalog.API.IntegrationEvents
 {

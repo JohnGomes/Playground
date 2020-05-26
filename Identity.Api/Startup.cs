@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
+using EventBus.Abstractions;
 using StackExchange.Redis;
 
 namespace Microsoft.eShopOnContainers.Services.Identity.API
@@ -171,12 +172,21 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API
                     Predicate = r => r.Name.Contains("self")
                 });
             });
+            
+            
+            ConfigureEventBus(app);
         }
 
         private void RegisterAppInsights(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddApplicationInsightsKubernetesEnricher();
+        }
+        
+        protected virtual void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<PingIntegrationEvent, OrderStatusChangedToAwaitingValidationIntegrationEventHandler>();
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Basket.Api.IntegrationEvents.Events;
 using Basket.Api.Model;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Abstractions;
+using EventBus.Abstractions;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 

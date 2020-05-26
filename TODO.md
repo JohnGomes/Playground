@@ -1,12 +1,12 @@
 ### InProgress
-- Enable Basket/Cart functionality
-    - Wireup Shopping Gateway
-- Improve Seq logging
-- Configure Redis
+- Wire up RabbitMq Event
 
 ### TODO
-- Wire up RabbitMq Event
 - Add MediatR
+- Add Akka.NET
+    - Reactive Programming?
+    - Functional Programming?
+        - Immutability?
 - Implement CQRS
 - Create new DB Table
 - ✓ Get Identity server in place
@@ -15,3 +15,7 @@
 - ✓ Enable Mac Development
 - Use Seq with RabbitMQ
 - Add Elasticsearch
+✓ Enable Basket/Cart functionality
+    ✓ Wireup Shopping Gateway
+✓ Improve Seq logging
+✓ Configure Redis
