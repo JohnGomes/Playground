@@ -1,7 +1,7 @@
-﻿namespace Microsoft.eShopOnContainers.Services.Catalog.API.IntegrationEvents.Events
-{
-    using BuildingBlocks.EventBus.Events;
+﻿using EventBus.Events;
 
+namespace Microsoft.eShopOnContainers.Services.Catalog.API.IntegrationEvents.Events
+{
     public class OrderStockConfirmedIntegrationEvent : IntegrationEvent
     {
         public int OrderId { get; }

@@ -14,6 +14,8 @@ using Basket.Api.Infrastructure.Repositories;
 using Basket.Api.Middlewares;
 using Basket.Api.Model;
 using Basket.Api.Services;
+using EventBus;
+using EventBus.Abstractions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -22,8 +24,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBus;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -33,6 +33,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Playground.EventBusRabbitMQ;
 using RabbitMQ.Client;
+using Serilog;
 using StackExchange.Redis;
 
 namespace Basket.Api
@@ -149,7 +150,7 @@ namespace Basket.Api
                 var retryCount = int.TryParse(Configuration["EventBusRetryCount"], out var i) ? i : 5;
 
             
-                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
+                return new DefaultRabbitMQPersistentConnection(factory, Log.Logger, retryCount);
             });
             // }
             //
@@ -294,7 +295,7 @@ namespace Basket.Api
                 retryCount = int.Parse(Configuration["EventBusRetryCount"]);
             }
         
-            return new EventBusRabbitMQ(rabbitMqPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
+            return new EventBusRabbitMQ(rabbitMqPersistentConnection, Log.Logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
         });
         //     }
         //

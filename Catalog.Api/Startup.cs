@@ -12,8 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBus;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Abstractions;
 using Microsoft.eShopOnContainers.BuildingBlocks.EventBusServiceBus;
 using Microsoft.eShopOnContainers.BuildingBlocks.IntegrationEventLogEF;
 using Microsoft.eShopOnContainers.BuildingBlocks.IntegrationEventLogEF.Services;
@@ -31,9 +29,12 @@ using System;
 using System.Data.Common;
 using System.IO;
 using System.Reflection;
+using EventBus;
+using EventBus.Abstractions;
 using Microsoft.eShopOnContainers.Services.Catalog.API;
 using Microsoft.eShopOnContainers.WebMVC.Services;
 using Playground.EventBusRabbitMQ;
+using Serilog;
 
 namespace Catalog.Api
 {
@@ -324,7 +325,7 @@ namespace Catalog.Api
                         retryCount = int.Parse(configuration["EventBusRetryCount"]);
                     }
 
-                    return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
+                    return new DefaultRabbitMQPersistentConnection(factory, Log.Logger, retryCount);
                 });
             }
 
@@ -364,7 +365,7 @@ namespace Catalog.Api
                         retryCount = int.Parse(configuration["EventBusRetryCount"]);
                     }
 
-                    return new EventBusRabbitMQ(rabbitMQPersistentConnection, logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
+                    return new EventBusRabbitMQ(rabbitMQPersistentConnection, Log.Logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
                 });
             }
 

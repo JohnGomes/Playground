@@ -6,4 +6,9 @@
 
         public bool UseCustomizationData { get; set; }
     }
+
+    public class CatalogSettings
+    {
+        public string EventBusConnection { get; set; }
+    }
 }
