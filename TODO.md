@@ -1,5 +1,5 @@
 ### InProgress
-
+- Wireup Checkout
 
 ### TODO
 - Add MediatR
@@ -11,6 +11,7 @@
 - IOT?
 - Implement CQRS
 - RabbitMQ
+- Kubernetes
     - ✓ Wire up RabbitMq Event
 - Create new DB Table
 - ✓ Get Identity server in place
@@ -18,8 +19,8 @@
     - ✓ Use [Seq](https://datalust.co/seq)
 - ✓ Enable Mac Development
 - Use Seq with RabbitMQ
-- Add Elasticsearch
-✓ Enable Basket/Cart functionality
-    ✓ Wireup Shopping Gateway
-✓ Improve Seq logging
-✓ Configure Redis
+- Add Elasticsearch  
+✓ Enable Basket/Cart functionality  
+    ✓ Wireup Shopping Gateway  
+✓ Improve Seq logging  
+✓ Configure Redis  

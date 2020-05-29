@@ -196,6 +196,9 @@ namespace Shopping.Gateway
                 services.AddHttpClient<IBasketService, BasketService>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
                 
+                services.AddHttpClient<IOrderingService, OrderingService>()
+                    .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
+                
                 services.AddHttpClient<IBasketGrpcClient, BasketGrpcClient>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
                 

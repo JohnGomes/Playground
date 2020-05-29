@@ -28,6 +28,19 @@
     <ItemGroup>
         <Protobuf Include="..\Basket.Api\Proto\basket.proto" GrpcServices="Client" />
         <Protobuf Include="..\Catalog.Api\Proto\catalog.proto" GrpcServices="Client" />
+        <Protobuf Include="..\Ordering.Api\Proto\ordering.proto" GrpcServices="Client" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\Catalog.Api\Proto\catalog.proto">
+            <Link>Protos\catalog.proto</Link>
+        </Content>
+        <Content Include="..\Basket.Api\Proto\basket.proto">
+            <Link>Protos\basket.proto</Link>
+        </Content>
+        <Content Include="..\Ordering.Api\Proto\basket.proto">
+            <Link>Protos\basket.proto</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -37,6 +50,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Basket.Api\Basket.Api.csproj" />
+      <ProjectReference Include="..\Ordering.Api\Ordering.API.csproj" />
       <ProjectReference Include="..\WebMvc\WebMvc.csproj" />
     </ItemGroup>
 
