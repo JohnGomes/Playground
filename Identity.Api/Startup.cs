@@ -1,38 +1,36 @@
-﻿using Autofac;
+﻿using System;
+using System.Reflection;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using EventBus;
+using EventBus.Abstractions;
 using HealthChecks.UI.Client;
+using Identity.Api.Data;
+using Identity.Api.Devspaces;
+using Identity.Api.IntegrationEvents.EventHandling;
+using Identity.Api.IntegrationEvents.Events;
+using Identity.Api.Models;
+using Identity.Api.Services;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.eShopOnContainers.Services.Identity.API.Certificates;
-using Microsoft.eShopOnContainers.Services.Identity.API.Data;
-using Microsoft.eShopOnContainers.Services.Identity.API.Devspaces;
-using Microsoft.eShopOnContainers.Services.Identity.API.Models;
-using Microsoft.eShopOnContainers.Services.Identity.API.Services;
+using Microsoft.eShopOnContainers.BuildingBlocks.EventBusServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Reflection;
-using EventBus;
-using EventBus.Abstractions;
-using Identity.API.IntegrationEvents.EventHandling;
-using Identity.API.IntegrationEvents.Events;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.eShopOnContainers.BuildingBlocks.EventBusServiceBus;
 using Microsoft.Extensions.Options;
 using Playground.EventBusRabbitMQ;
 using RabbitMQ.Client;
 using Serilog;
-using StackExchange.Redis;
 
-namespace Microsoft.eShopOnContainers.Services.Identity.API
+namespace Identity.Api
 {
     public class Startup
     {
@@ -86,13 +84,17 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             // Adds IdentityServer
-            services.AddIdentityServer(x =>
+            var identityServerBuilder = services.AddIdentityServer(x =>
             {
                 x.IssuerUri = "null";
                 x.Authentication.CookieLifetime = TimeSpan.FromHours(2);
-            })
-            .AddDevspacesIfNeeded(Configuration.GetValue("EnableDevspaces", false))
-            .AddSigningCredential(Certificate.Get())
+            });
+            
+            //TODO only use this in development
+            identityServerBuilder.AddDeveloperSigningCredential();
+                
+            identityServerBuilder.AddDevspacesIfNeeded(Configuration.GetValue("EnableDevspaces", false))
+            // .AddSigningCredential(Certificate.Certificate.Get())
             .AddAspNetIdentity<ApplicationUser>()
             .AddConfigurationStore(options =>
             {

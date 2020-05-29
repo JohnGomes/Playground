@@ -1,10 +1,9 @@
+using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
-
-namespace Microsoft.eShopOnContainers.Services.Identity.API.Devspaces
+namespace Identity.Api.Devspaces
 {
     public class DevspacesRedirectUriValidator : IRedirectUriValidator
     {

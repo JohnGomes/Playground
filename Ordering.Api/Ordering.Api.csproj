@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-Ordering.API-20161122013547</UserSecretsId>
+    <UserSecretsId>aspnet-Ordering.Api-20161122013547</UserSecretsId>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
     <GenerateErrorForMissingTargetingPacks>false</GenerateErrorForMissingTargetingPacks>
@@ -77,9 +77,9 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="obj\Debug\netcoreapp3.1\Ordering.cs" />
-    <Compile Include="obj\Debug\netcoreapp3.1\OrderingGrpc.cs" />
-  </ItemGroup>
+<!--  <ItemGroup>-->
+<!--    <Compile Include="obj\Debug\netcoreapp3.1\Ordering.cs" />-->
+<!--    <Compile Include="obj\Debug\netcoreapp3.1\OrderingGrpc.cs" />-->
+<!--  </ItemGroup>-->
 
 </Project>

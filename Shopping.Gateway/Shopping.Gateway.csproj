@@ -50,7 +50,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Basket.Api\Basket.Api.csproj" />
-      <ProjectReference Include="..\Ordering.Api\Ordering.API.csproj" />
+      <ProjectReference Include="..\Ordering.Api\Ordering.Api.csproj" />
       <ProjectReference Include="..\WebMvc\WebMvc.csproj" />
     </ItemGroup>
 

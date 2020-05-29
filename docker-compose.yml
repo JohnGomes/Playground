@@ -166,6 +166,42 @@ services:
     ports:
       - "54010:443"
       - "54011:80"
+  ordering-api:
+    container_name: ordering-api-eshop
+    build:
+      context: .
+      dockerfile: Ordering.Api/Dockerfile
+    networks:
+      - playground_default
+    depends_on:
+      - sqlserver
+      - rabbitmq
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionString=server=sqlserver-eshop;user id=sa;password=Pass@word123;database=Microsoft.eShopOnContainers.Services.CatalogDb;
+      - PicBaseUrl=https://localhost:44323/api/v1/catalog/items/[0]/pic/  #Local: You need to open your local dev-machine firewall at range 5100-5110.
+      - EventBusConnection=rabbitmq-eshop
+      - EventBusUserName=admin
+      - EventBusPassword=Pass@word1
+      - AzureStorageAccountName=
+      - AzureStorageAccountKey=
+      - UseCustomizationData=True
+      - AzureServiceBusEnabled=False
+      - AzureStorageEnabled=False
+      - ApplicationInsights__InstrumentationKey=
+      - OrchestratorType=
+      - GRPC_PORT=81
+      - PORT=80
+      - PATH_BASE=/catalog-api
+      - ASPNETCORE_HTTPS_PORT=44323
+      - ASPNETCORE_URLS=https://+443;http://+80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
+      - CERTIFICATE_PATH=/app/Cert #C:/tmp
+      - Serilog__SeqServerUrl=http://seq/
+    ports:
+      - "44275:80"
+      - "44276:443"
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq-eshop

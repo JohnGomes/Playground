@@ -1,10 +1,8 @@
 using System.Threading.Tasks;
 using EventBus.Abstractions;
-using Identity.API.IntegrationEvents.Events;
-using Microsoft.eShopOnContainers.Services.Identity.API;
-using Microsoft.Extensions.Logging;
+using Identity.Api.IntegrationEvents.Events;
 
-namespace Identity.API.IntegrationEvents.EventHandling
+namespace Identity.Api.IntegrationEvents.EventHandling
 {
     public class PingIntegrationEventHandler : IIntegrationEventHandler<PingIntegrationEvent>
     {

@@ -11,14 +11,19 @@ COPY "Shopping.Gateway/Shopping.Gateway.csproj" "Shopping.Gateway/Shopping.Gatew
 COPY "EventBusRabbitMQ/EventBusRabbitMQ.csproj" "EventBusRabbitMQ/EventBusRabbitMQ.csproj"
 COPY "EventBusServiceBus/EventBusServiceBus.csproj" "EventBusServiceBus/EventBusServiceBus.csproj"
 COPY "EventBus/EventBus.csproj" "EventBus/EventBus.csproj"
+COPY "WebHost.Customization/WebHost.Customization.csproj" "WebHost.Customization/WebHost.Customization.csproj"
 COPY "IntegrationEventLogEF/IntegrationEventLogEF.csproj" "IntegrationEventLogEF/IntegrationEventLogEF.csproj"
 COPY "Basket.Api/Basket.Api.csproj" "Basket.Api/Basket.Api.csproj"
 COPY "GrpcGreeter/GrpcGreeter.csproj" "GrpcGreeter/GrpcGreeter.csproj"
 COPY "GrpcGreeterClient/GrpcGreeterClient.csproj" "GrpcGreeterClient/GrpcGreeterClient.csproj"
 COPY "Catalog.Api/Catalog.Api.csproj" "Catalog.Api/Catalog.Api.csproj"
 COPY "WebMvc/WebMvc.csproj" "WebMvc/WebMvc.csproj"
-COPY "Catalog.Api/Catalog.Api.csproj" "Catalog.Api/Catalog.Api.csproj"
-COPY "Identity.Api/Identity.API.csproj" "Identity.Api/Identity.API.csproj"
+COPY "Identity.Api/Identity.Api.csproj" "Identity.Api/Identity.Api.csproj"
+COPY "Ordering.Api/Ordering.Api.csproj" "Ordering.Api/Ordering.Api.csproj"
+COPY "Ordering.Domain/Ordering.Domain.csproj" "Ordering.Domain/Ordering.Domain.csproj"
+COPY "Ordering.Infrastructure/Ordering.Infrastructure.csproj" "Ordering.Infrastructure/Ordering.Infrastructure.csproj"
+
+COPY "NuGet.config" "NuGet.config"
 
 
 RUN dotnet restore "Playground.sln"
@@ -39,4 +44,4 @@ RUN chmod 644 /usr/local/share/ca-certificates/identity-api.crt
 RUN chmod 644 /usr/local/share/ca-certificates/identity-api2.crt 
 RUN chmod 644 /usr/local/share/ca-certificates/localhost.crt 
 RUN update-ca-certificates
-ENTRYPOINT ["dotnet", "Identity.API.dll"]
+ENTRYPOINT ["dotnet", "Identity.Api.dll"]

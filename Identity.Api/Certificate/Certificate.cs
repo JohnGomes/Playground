@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Microsoft.eShopOnContainers.Services.Identity.API.Certificates
+namespace Identity.Api.Certificate
 {
     static class Certificate
     {
@@ -18,9 +19,22 @@ namespace Microsoft.eShopOnContainers.Services.Identity.API.Certificates
              *  of the scope of this project.
              **********************************************************************************************/
             // pkcs12 -export -in public-idsrv3test.pem -inkey private-idsrv3test.pem -out Identity.API.Certificate.idsrv3test.pfx -password pass:"idsrv3test"
-            using (var stream = assembly.GetManifestResourceStream("Identity.API.Certificate.idsrv3test.pfx"))
+            // using (var stream = assembly.GetManifestResourceStream("Identity.API.Certificate.idsrv3test.pfx"))
+            // {
+            //     return new X509Certificate2(ReadStream(stream), "idsrv3test");
+            // }
+            
+            string thumbPrint = "104A19DB7AEA7B438F553461D8155C65BBD6E2C0";
+            // Starting with the .NET Framework 4.6, X509Store implements IDisposable.
+            // On older .NET, store.Close should be called.
+            using (var store = new X509Store(StoreName.My, StoreLocation.LocalMachine))
             {
-                return new X509Certificate2(ReadStream(stream), "idsrv3test");
+                store.Open(OpenFlags.ReadOnly);
+                var certCollection = store.Certificates.Find(X509FindType.FindByThumbprint, thumbPrint, validOnly: false);
+                if (certCollection.Count == 0)
+                    throw new Exception("No certificate found containing the specified thumbprint.");
+
+                return certCollection[0];
             }
         }
 

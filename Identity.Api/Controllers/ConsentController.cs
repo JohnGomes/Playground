@@ -1,13 +1,13 @@
-﻿using IdentityServer4.Models;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Identity.Api.Models.AccountViewModels;
+using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.eShopOnContainers.Services.Identity.API.Models.AccountViewModels;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Microsoft.eShopOnContainers.Services.Identity.API.Controllers
+namespace Identity.Api.Controllers
 {
     /// <summary>
     /// This controller implements the consent logic

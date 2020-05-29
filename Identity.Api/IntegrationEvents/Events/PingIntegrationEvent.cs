@@ -1,6 +1,6 @@
 using EventBus.Events;
 
-namespace Identity.API.IntegrationEvents.Events
+namespace Identity.Api.IntegrationEvents.Events
 {
     public class PingIntegrationEvent : IntegrationEvent
     {

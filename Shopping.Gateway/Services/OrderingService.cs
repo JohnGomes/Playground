@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using GrpcOrdering;
 using Microsoft.Extensions.Logging;
@@ -51,15 +52,15 @@ namespace Shopping.Gateway.Services
                 Total = (decimal) orderDraft.Total,
             };
 
-            // orderDraft.OrderItems.ToList().ForEach(o => data.OrderItems.Add(new OrderItemData
-            // {
-            //     Discount = (decimal)o.Discount,
-            //     PictureUrl = o.PictureUrl,
-            //     ProductId = o.ProductId,
-            //     ProductName = o.ProductName,
-            //     UnitPrice = (decimal)o.UnitPrice,
-            //     Units = o.Units,
-            // }));
+            orderDraft.OrderItems.ToList().ForEach(o => data.OrderItems.Add(new OrderItemData
+            {
+                Discount = (decimal)o.Discount,
+                PictureUrl = o.PictureUrl,
+                ProductId = o.ProductId,
+                ProductName = o.ProductName,
+                UnitPrice = (decimal)o.UnitPrice,
+                Units = o.Units,
+            }));
 
             return data;
         }

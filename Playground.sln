@@ -32,11 +32,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusRabbitMQ", "EventBu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusServiceBus", "EventBusServiceBus\EventBusServiceBus.csproj", "{1DED9D08-F979-446B-92D2-3FBBDE0DFD3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.API", "Identity.Api\Identity.API.csproj", "{FDDE0C2C-B657-45DD-ADE9-7832F7DC3EEE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Api", "Identity.Api\Identity.Api.csproj", "{FDDE0C2C-B657-45DD-ADE9-7832F7DC3EEE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ordering", "Ordering", "{2E1A9903-E1F9-41A9-A205-B70E04D16862}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.API", "Ordering.Api\Ordering.API.csproj", "{AF762A57-9834-44C7-A1A4-F2B7A2CF1254}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Api", "Ordering.Api\Ordering.Api.csproj", "{AF762A57-9834-44C7-A1A4-F2B7A2CF1254}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ordering.Infrastructure", "Ordering.Infrastructure\Ordering.Infrastructure.csproj", "{F8C077D7-7AB9-4725-83DE-522CAEC52E29}"
 EndProject
