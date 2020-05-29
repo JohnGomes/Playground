@@ -29,7 +29,7 @@
     "file-loader": "5.0.2",
     "font-awesome": "4.7.0",
     "isomorphic-fetch": "2.2.1",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "ngx-toastr": "11.3.2",
     "normalize.css": "8.0.1",
     "popper.js": "^1.14.4",
