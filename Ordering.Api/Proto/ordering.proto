@@ -6,6 +6,7 @@ package OrderingApi;
 
 service Ordering {
 	rpc CreateOrderDraftFromBasketData(CreateOrderDraftCommand) returns (OrderDraftDTO) {}
+    rpc SayHello (HelloRequest) returns (HelloReply);
 }
 
 message CreateOrderDraftCommand {
@@ -35,5 +36,13 @@ message OrderItemDTO {
     double discount = 4;
     int32 units = 5;
     string pictureUrl = 6;
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
 }
 

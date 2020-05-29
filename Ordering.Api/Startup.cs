@@ -265,7 +265,7 @@ namespace Ordering.Api
                 options.DescribeAllEnumsAsStrings();
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "eShopOnContainers - Ordering HTTP API",
+                    Title = "Ordering API",
                     Version = "v1",
                     Description = "The Ordering Service HTTP API"
                 });

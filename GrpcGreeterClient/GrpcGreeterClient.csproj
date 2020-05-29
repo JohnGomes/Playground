@@ -25,12 +25,16 @@
     <Content Include="..\Basket.Api\Proto\basket.proto">
       <Link>Protos\basket.proto</Link>
     </Content>
+    <Content Include="..\Ordering.Api\Proto\basket.proto">
+      <Link>Protos\basket.proto</Link>
+    </Content>
   </ItemGroup>
   
   <ItemGroup>
     <Protobuf Include="..\GrpcGreeter\Protos\greet.proto" GrpcServices="Client" />
     <Protobuf Include="..\Catalog.Api\Proto\catalog.proto" GrpcServices="Client" />
     <Protobuf Include="..\Basket.Api\Proto\basket.proto" GrpcServices="Client" />
+    <Protobuf Include="..\Ordering.Api\Proto\ordering.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>

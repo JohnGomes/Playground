@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -8,6 +9,7 @@ using Microsoft.eShopOnContainers.BuildingBlocks.IntegrationEventLogEF;
 using Microsoft.eShopOnContainers.Services.Ordering.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ordering.Api.Infrastructure;
@@ -31,6 +33,7 @@ namespace Ordering.Api
             {
                 Log.Information("Configuring web host ({ApplicationContext})...", AppName);
                 var host = BuildWebHost(configuration, args);
+                // var host = CreateHostBuilder(configuration, args);
 
                 Log.Information("Applying migrations ({ApplicationContext})...", AppName);
                 host.MigrateDbContext<OrderingContext>((context, services) =>
@@ -61,22 +64,45 @@ namespace Ordering.Api
             }
         }
 
+        public static IHostBuilder CreateHostBuilder(IConfiguration configuration, string[] args)
+        {
+            
+            return Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureLogging(logging =>
+                {
+                    logging.AddFilter("Grpc", LogLevel.Debug);
+                    logging.AddConsole(o => o.IncludeScopes = true);
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.CaptureStartupErrors(false);
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
+                });
+        }
+        
         private static IWebHost BuildWebHost(IConfiguration configuration, string[] args) =>
             Microsoft.AspNetCore.WebHost.CreateDefaultBuilder(args)
                 .CaptureStartupErrors(false)
-                .ConfigureKestrel(options =>
+                // .ConfigureKestrel(options =>
+                // {
+                //     var ports = GetDefinedPorts(configuration);
+                //     options.Listen(IPAddress.Any, ports.httpPort, listenOptions =>
+                //     {
+                //         listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                //     });
+                //
+                //     options.Listen(IPAddress.Any, ports.grpcPort, listenOptions =>
+                //     {
+                //         listenOptions.Protocols = HttpProtocols.Http2;
+                //     });
+                //
+                // })
+                .ConfigureLogging(logging =>
                 {
-                    var ports = GetDefinedPorts(configuration);
-                    options.Listen(IPAddress.Any, ports.httpPort, listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                    });
-
-                    options.Listen(IPAddress.Any, ports.grpcPort, listenOptions =>
-                    {
-                        listenOptions.Protocols = HttpProtocols.Http2;
-                    });
-
+                    logging.AddFilter("Grpc", LogLevel.Debug);
+                    logging.AddConsole(o => o.IncludeScopes = true);
                 })
                 .UseStartup<Startup>()
                 .UseApplicationInsights()

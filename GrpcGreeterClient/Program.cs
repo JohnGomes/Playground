@@ -6,6 +6,7 @@ using GrpcGreeter;
 using GrpcBasket;
 using Grpc.Net.Client;
 using GrpcCatalog;
+using GrpcOrdering;
 using HelloReply = GrpcGreeter.HelloReply;
 
 
@@ -37,12 +38,21 @@ namespace GrpcGreeterClient
                 var key = Console.ReadKey();
                 if (key.Key == ConsoleKey.Enter)
                 {
+                    await Ordering();
                     await Catalog();
                     await Basket();
                     continue;
                 }
                 break;
             }
+        }
+        
+        private static async Task Ordering()
+        {
+            using var channel = GrpcChannel.ForAddress("https://localhost:44276");
+            var client = new Ordering.OrderingClient(channel);
+            var reply = await client.SayHelloAsync(new GrpcOrdering.HelloRequest() {Name = "OrderingClient"});
+            Console.WriteLine("Greeting: " + reply.Message);
         }
         
         private static async Task Catalog()

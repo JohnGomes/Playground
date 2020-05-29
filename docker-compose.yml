@@ -192,8 +192,8 @@ services:
       - OrchestratorType=
       - GRPC_PORT=81
       - PORT=80
-      - PATH_BASE=/catalog-api
-      - ASPNETCORE_HTTPS_PORT=44323
+      - PATH_BASE=/ordering-api
+      - ASPNETCORE_HTTPS_PORT=44276
       - ASPNETCORE_URLS=https://+443;http://+80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Pass@word1
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
