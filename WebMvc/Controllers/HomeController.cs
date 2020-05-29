@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Basket.Api.Controllers
+namespace Microsoft.eShopContainers.WebMvc.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     // [Route("")]
@@ -10,7 +10,7 @@ namespace Basket.Api.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return new RedirectResult("~/swagger");
+            return new RedirectResult("~/catalog");
         }
     }
 }

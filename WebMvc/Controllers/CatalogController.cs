@@ -35,6 +35,8 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
             
             _eventBus.Publish(eventMessage);
             
+            Log.Logger.Information(" ------------- Catalog Ping - After Publish ------------- ");
+            
             
             var itemsPage = 10;
             var catalog = await _catalogSvc.GetCatalogItems(page ?? 0, itemsPage, BrandFilterApplied, TypesFilterApplied);

@@ -6,6 +6,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using Autofac;
+using EventBus;
+using EventBus.Abstractions;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Certificate;
 // using HealthChecks.UI.Client;
@@ -16,6 +19,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Azure.ServiceBus;
+using Microsoft.eShopOnContainers.BuildingBlocks.EventBusServiceBus;
 using Microsoft.eShopOnContainers.WebMVC;
 using Microsoft.eShopOnContainers.WebMVC.Services;
 using Microsoft.eShopOnContainers.WebMVC.ViewModels;
@@ -24,7 +29,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
+using Playground.EventBusRabbitMQ;
+using RabbitMQ.Client;
+using Serilog;
 using WebMVC.Infrastructure;
 using WebMVC.Infrastructure.Middlewares;
 using WebMVC.Services;
@@ -53,6 +63,8 @@ namespace WebApplication
                 .AddAppInsight(Configuration)
                 .AddHealthChecks(Configuration)
                 .AddCustomMvc(Configuration)
+                .AddIntegrationServices(Configuration)
+                .AddEventBus(Configuration)
                 // .AddDevspaces()
                 .AddHttpClientServices(Configuration, _env);
 
@@ -115,11 +127,105 @@ namespace WebApplication
                 });
             });
         }
+        
     }
 
     static class ServiceCollectionExtensions
     {
 
+        public static IServiceCollection AddIntegrationServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            {
+                services.AddSingleton<IServiceBusPersisterConnection>(sp =>
+                {
+                    var settings = sp.GetRequiredService<IOptions<CatalogSettings>>().Value;
+                    var logger = sp.GetRequiredService<ILogger<DefaultServiceBusPersisterConnection>>();
+
+                    var serviceBusConnection = new ServiceBusConnectionStringBuilder(settings.EventBusConnection);
+
+                    return new DefaultServiceBusPersisterConnection(serviceBusConnection, logger);
+                });
+            }
+            else
+            {
+                services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+                {
+                    var settings = sp.GetRequiredService<IOptions<CatalogSettings>>().Value;
+                    var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+                    
+                    var factory = new ConnectionFactory()
+                    {
+                        HostName = configuration["EventBusConnection"],
+                        DispatchConsumersAsync = true
+                    };
+
+
+                    if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
+                    {
+                        factory.UserName = configuration["EventBusUserName"];
+                    }
+
+                    if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
+                    {
+                        factory.Password = configuration["EventBusPassword"];
+                    }
+
+                    var retryCount = 5;
+                    if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
+                    {
+                        retryCount = int.Parse(configuration["EventBusRetryCount"]);
+                    }
+
+                    return new DefaultRabbitMQPersistentConnection(factory, Log.Logger, retryCount);
+                });
+            }
+
+            return services;
+        }
+        
+        public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
+        {
+            var subscriptionClientName = configuration["SubscriptionClientName"];
+
+            if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            {
+                services.AddSingleton<IEventBus, EventBusServiceBus>(sp =>
+                {
+                    var serviceBusPersisterConnection = sp.GetRequiredService<IServiceBusPersisterConnection>();
+                    var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                    var logger = sp.GetRequiredService<ILogger<EventBusServiceBus>>();
+                    var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+
+                    return new EventBusServiceBus(serviceBusPersisterConnection, logger,
+                        eventBusSubcriptionsManager, subscriptionClientName, iLifetimeScope);
+                });
+
+            }
+            else
+            {
+                services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
+                {
+                    var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
+                    var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                    var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
+                    var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
+
+                    var retryCount = 5;
+                    if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
+                    {
+                        retryCount = int.Parse(configuration["EventBusRetryCount"]);
+                    }
+                    
+                    return new EventBusRabbitMQ(rabbitMQPersistentConnection, Log.Logger, iLifetimeScope, eventBusSubcriptionsManager, subscriptionClientName, retryCount);
+                });
+            }
+
+            services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+
+            return services;
+        }
+        
         public static IServiceCollection AddAppInsight(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddApplicationInsightsTelemetry(configuration);

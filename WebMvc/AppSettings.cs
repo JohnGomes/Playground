@@ -35,4 +35,9 @@ namespace Microsoft.eShopOnContainers.WebMVC
         public string System { get; set; }
         public string Microsoft { get; set; }
     }
+    
+    public class CatalogSettings
+    {
+        public string EventBusConnection { get; set; }
+    }
 }

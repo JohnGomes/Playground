@@ -1,8 +1,10 @@
 using System;
 using System.IO;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using WebApplication;
 
@@ -23,7 +25,7 @@ namespace Microsoft.eShopContainers.WebMVC
             try
             {
                 Log.Information("Configuring web host ({ApplicationContext})...", AppName);
-                var host = BuildWebHost(configuration, args);
+                var host = BuildHost(configuration, args);
 
                 Log.Information("Starting web host ({ApplicationContext})...", AppName);
                 host.Run();
@@ -41,15 +43,30 @@ namespace Microsoft.eShopContainers.WebMVC
             }
         }
 
-        private static IWebHost BuildWebHost(IConfiguration configuration, string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .CaptureStartupErrors(false)
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .UseConfiguration(configuration)
-                .UseSerilog()
-                .Build();
+        // private static IWebHost BuildWebHost(IConfiguration configuration, string[] args) =>
+        //     WebHost.CreateDefaultBuilder(args)
+        //         .CaptureStartupErrors(false)
+        //         .UseStartup<Startup>()
+        //         .UseApplicationInsights()
+        //         .UseConfiguration(configuration)
+        //         .UseSerilog()
+        //         .Build();
 
+        private static IHost BuildHost(IConfiguration configuration, string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .ConfigureWebHostDefaults(webHostBuilder =>
+            {
+                webHostBuilder
+                    .CaptureStartupErrors(false)
+                    .UseStartup<Startup>()
+                    .UseApplicationInsights()
+                    .UseConfiguration(configuration)
+                    .UseSerilog();
+            })
+            .Build();
+
+        
          private static Serilog.ILogger CreateSerilogLogger(IConfiguration configuration)
         {
             var seqServerUrl = configuration["Serilog:SeqServerUrl"];

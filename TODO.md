@@ -1,5 +1,5 @@
 ### InProgress
-- Wire up RabbitMq Event
+
 
 ### TODO
 - Add MediatR
@@ -7,7 +7,11 @@
     - Reactive Programming?
     - Functional Programming?
         - Immutability?
+    - Domain Driven Design?
+- IOT?
 - Implement CQRS
+- RabbitMQ
+    - ✓ Wire up RabbitMq Event
 - Create new DB Table
 - ✓ Get Identity server in place
 - ✓ Get Logger working correctly

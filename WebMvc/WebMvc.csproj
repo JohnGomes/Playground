@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.2" />
+      <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
       <PackageReference Include="Microsoft.ApplicationInsights" Version="2.12.0" />
       <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="3.1.1" />
@@ -114,6 +115,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Basket.Api\Basket.Api.csproj" />
+      <ProjectReference Include="..\EventBusServiceBus\EventBusServiceBus.csproj" />
       <ProjectReference Include="..\EventBus\EventBus.csproj" />
     </ItemGroup>
 
