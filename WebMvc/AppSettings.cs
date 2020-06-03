@@ -13,6 +13,7 @@ namespace Microsoft.eShopOnContainers.WebMVC
         public string ShoppingUrl { get; set; }
         public string BasketUrl { get; set; }
         public string CatalogUrl { get; set; }
+        public string OrderingUrl { get; set; }
         public string SignalrHubUrl { get; set; }
         public bool ActivateCampaignDetailFunction { get; set; }
         public Logging Logging { get; set; }
