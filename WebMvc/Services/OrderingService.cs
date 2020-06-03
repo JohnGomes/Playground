@@ -39,7 +39,6 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
         async public Task<List<Order>> GetMyOrders(ApplicationUser user)
         {
             var uri = API.Order.GetAllMyOrders(_remoteServiceBaseUrl);
-
             var responseString = await _httpClient.GetStringAsync(uri);
 
             var response = JsonConvert.DeserializeObject<List<Order>>(responseString);

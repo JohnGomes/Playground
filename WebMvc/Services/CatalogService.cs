@@ -26,7 +26,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
             _logger = logger;
             
             //_remoteServiceBaseUrl = $"{_settings.Value.PurchaseUrl}/c/api/v1/catalog/";
-            _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/api/v1/catalog/";
+            _remoteServiceBaseUrl = $"{_settings.Value.CatalogUrl}/c/api/v1/catalog/";
             //_remoteServiceBaseUrl = $"google.com/api/v1/catalog/";
             
         }

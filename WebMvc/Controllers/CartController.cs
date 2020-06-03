@@ -31,6 +31,8 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
         {
             try
             {
+                Console.WriteLine($"@@@@@@@@@@@@@@@@  CartController GET Index  @@@@@@@@@@@@");
+
                 var user = _appUserParser.Parse(HttpContext.User);
                 var vm = await _basketSvc.GetBasket(user);
 
@@ -50,10 +52,12 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
         {
             try
             {
+                Console.WriteLine($"@@@@@@@@@@@@@@@@   CartController POST Index  @@@@@@@@@@@@");
                 var user = _appUserParser.Parse(HttpContext.User);
                 var basket = await _basketSvc.SetQuantities(user, quantities);
                 if (action == "[ Checkout ]")
                 {
+
                     return RedirectToAction("Create", "Order");
                 }
             }
@@ -70,6 +74,8 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
         {
             try
             {
+                Console.WriteLine($"@@@@@@@@@@@@@@@@   CartController AddToCart  @@@@@@@@@@@@");
+
                 if (productDetails?.Id != null)
                 {
                     var user = _appUserParser.Parse(HttpContext.User);

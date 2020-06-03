@@ -19,9 +19,10 @@ services:
       - EventBusPassword=Pass@word1
       - SubscriptionClientName=WebMVC
       - CERTIFICATE_PATH=/app/Cert #C:/tmp
-      - BasketUrl=https://basket-api #https://localhost:44376 #
-      - CatalogUrl=https://catalog-api #Https://localhost:44323 #
-      - PurchaseUrl=https://shopping-gateway #https://localhost:44373 #
+      - BasketUrl=https://shopping-gateway-proxy #https://basket-api #https://localhost:44376 #
+      - CatalogUrl=https://shopping-gateway-proxy #https://catalog-api #Https://localhost:44323 #
+      - PurchaseUrl=https://shopping-gateway-proxy #https://shopping-gateway #https://localhost:44373 #
+      - ShoppingUrl=https://shopping-gateway
       - ASPNETCORE_HTTPS_PORT=44384
       - ASPNETCORE_URLS=https://+443;http://+80
       - IdentityUrl=https://6f4dc2a9b45d.ngrok.io #https://identity-api #use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
@@ -36,6 +37,16 @@ services:
     ports:
       - "44384:443"
       - "44385:80"
+  shopping-gateway-proxy:
+    image: envoyproxy/envoy:v1.11.1
+    container_name: shopping-gateway-proxy-eshop
+    volumes:
+      - ./Shopping.Gateway/envoy:/etc/envoy
+      - ./Cert:/etc/Cert
+    ports:
+      - "5201:80"
+      - "5202:443"
+      - "15201:8001"
   shopping-gateway:
     container_name: shopping-gateway-eshop
     build:
@@ -199,6 +210,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/Cert/localhost.pfx
       - CERTIFICATE_PATH=/app/Cert #C:/tmp
       - Serilog__SeqServerUrl=http://seq/
+      - IdentityUrl=https://6f4dc2a9b45d.ngrok.io #https://identity-api #use ngrok to generate url https://dashboard.ngrok.com/get-started - ngrok http https://localhost:54010
     ports:
       - "44275:80"
       - "44276:443"

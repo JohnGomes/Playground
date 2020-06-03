@@ -3,30 +3,33 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.eShopOnContainers.WebMVC.Services;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shopping.Gateway.Models;
 using Shopping.Gateway.Services;
 using IBasketService = Shopping.Gateway.Services.IBasketService;
+using ILogger = Serilog.ILogger;
 
 namespace Shopping.Gateway.Controllers
 {
-    [Route("api/v1/shopping/[controller]")]
-    [Authorize]
-    [ApiController]
+    [Route("api/v1/[controller]")]
+    // [Authorize]
+    // [ApiController]
     public class BasketController : ControllerBase
     {
         private readonly ICatalogGrpcService _catalogGrpc;
         private readonly IBasketService _basket;
+        private ILogger<BasketController> _logger;
 
-        public BasketController(ICatalogGrpcService catalogGrpcService, IBasketService basketService)
+        public BasketController(ICatalogGrpcService catalogGrpcService, IBasketService basketService, ILogger<BasketController> logger)
         {
             _catalogGrpc = catalogGrpcService;
             _basket = basketService;
+            _logger = logger;
         }
 
-        [HttpPost]
+        [HttpPost(Name="UpdateAllBasket")]
         [HttpPut]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(BasketData), (int)HttpStatusCode.OK)]
@@ -125,6 +128,9 @@ namespace Shopping.Gateway.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<ActionResult> AddBasketItemAsync([FromBody] AddBasketItemRequest data)
         {
+            
+            Console.WriteLine($"@@@@@@@@@@@@@@@@@@ AddBasketItemAsync");
+            _logger.LogInformation($"@@@@@@@@@@@@@@@@@@ AddBasketItemAsync");
             if (data == null || data.Quantity == 0)
             {
                 return BadRequest("Invalid payload");
@@ -161,6 +167,15 @@ namespace Shopping.Gateway.Controllers
             // Step 5: Update basket
             await _basket.UpdateAsync(currentBasket);
         
+            return Ok();
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int) HttpStatusCode.OK)]
+        public async Task<ActionResult> Get()
+        {
             return Ok();
         }
     }

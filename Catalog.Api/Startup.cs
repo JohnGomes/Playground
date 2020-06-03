@@ -32,7 +32,6 @@ using System.Reflection;
 using EventBus;
 using EventBus.Abstractions;
 using Microsoft.eShopOnContainers.Services.Catalog.API;
-using Microsoft.eShopOnContainers.WebMVC.Services;
 using Playground.EventBusRabbitMQ;
 using Serilog;
 

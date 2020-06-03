@@ -95,7 +95,7 @@ namespace Catalog.Api
             var seqServerUrl = configuration["Serilog:SeqServerUrl"];
             var logstashUrl = configuration["Serilog:LogstashgUrl"];
             return new LoggerConfiguration()
-                .MinimumLevel.Verbose()
+                .MinimumLevel.Information()
                 .Enrich.WithProperty("ApplicationContext", "Catalog.Api")
                 .Enrich.FromLogContext()
                 .WriteTo.Console()

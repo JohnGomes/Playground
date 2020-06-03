@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +56,12 @@ namespace Basket.Api
             services.AddCustomHealthCheck(Configuration);
             
             // RegisterAppInsights(services);
+            
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = 
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
 
             services.AddControllers(options =>
                 {
@@ -186,7 +193,16 @@ namespace Basket.Api
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
-            // app.UseHttpsRedirection();
+            // app.UseHsts();
+             // app.UseHttpsRedirection();
+             
+             app.Use((context, next) =>
+             {
+                 context.Request.Scheme = "https";
+                 return next();
+             });
+             
+             app.UseForwardedHeaders();
 
             app.UseRouting();
             
@@ -203,6 +219,7 @@ namespace Basket.Api
 
             // app.UseRouting();
             ConfigureAuth(app);
+
 
             // app.UseStaticFiles();
 

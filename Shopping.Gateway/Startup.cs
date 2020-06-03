@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Basket.Api.Middlewares;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Shopping.Gateway.Config;
+using Shopping.Gateway.Filters.Basket.API.Infrastructure.Filters;
 using Shopping.Gateway.Services;
 
 namespace Shopping.Gateway
@@ -38,17 +38,16 @@ namespace Shopping.Gateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
-                .AddUrlGroup(new Uri(Configuration["BasketUrlHC"]), "basketapi-check",  tags: new[] {"basketapi"});
-                // .AddUrlGroup(new Uri(Configuration["CatalogUrlHC"]), name: "catalogapi-check", tags: new string[] { "catalogapi" })
-                // .AddUrlGroup(new Uri(Configuration["OrderingUrlHC"]), name: "orderingapi-check", tags: new string[] { "orderingapi" })
-                // .AddUrlGroup(new Uri(Configuration["IdentityUrlHC"]), name: "identityapi-check", tags: new string[] { "identityapi" })
-                // .AddUrlGroup(new Uri(Configuration["MarketingUrlHC"]), name: "marketingapi-check", tags: new string[] { "marketingapi" })
-                // .AddUrlGroup(new Uri(Configuration["PaymentUrlHC"]), name: "paymentapi-check", tags: new string[] { "paymentapi" })
-                // .AddUrlGroup(new Uri(Configuration["LocationUrlHC"]), name: "locationapi-check", tags: new string[] { "locationapi" });
-            
+                .AddUrlGroup(new Uri(Configuration["BasketUrlHC"]), "basketapi-check", tags: new[] {"basketapi"});
+                // .AddUrlGroup(new Uri(Configuration["CatalogUrlHC"]), name: "catalogapi-check", tags: new string[] {"catalogapi"})
+                // .AddUrlGroup(new Uri(Configuration["OrderingUrlHC"]), name: "orderingapi-check", tags: new string[] {"orderingapi"})
+                // .AddUrlGroup(new Uri(Configuration["IdentityUrlHC"]), name: "identityapi-check", tags: new string[] {"identityapi"});
+            // .AddUrlGroup(new Uri(Configuration["MarketingUrlHC"]), name: "marketingapi-check", tags: new string[] { "marketingapi" })
+            // .AddUrlGroup(new Uri(Configuration["PaymentUrlHC"]), name: "paymentapi-check", tags: new string[] { "paymentapi" })
+            // .AddUrlGroup(new Uri(Configuration["LocationUrlHC"]), name: "locationapi-check", tags: new string[] { "locationapi" });
+
             services.AddControllers().AddNewtonsoftJson();
             // services.AddMvc();
             services.AddCustomMvc(Configuration);
@@ -117,17 +116,16 @@ namespace Shopping.Gateway
 
             var identityUrl = configuration.GetValue<string>("urls:identity");
             services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            })
-            .AddJwtBearer(options =>
-            {
-                options.Authority = identityUrl;
-                options.RequireHttpsMetadata = false;
-                options.Audience = "webshoppingagg";
-            });
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = identityUrl;
+                    options.RequireHttpsMetadata = false;
+                    options.Audience = "webshoppingagg";
+                });
 
             return services;
         }
@@ -150,7 +148,7 @@ namespace Shopping.Gateway
                     Version = "v1",
                     Description = "Shopping Aggregator for Web Clients"
                 });
-
+                options.CustomSchemaIds(x => x.FullName);
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
@@ -163,7 +161,7 @@ namespace Shopping.Gateway
 
                             Scopes = new Dictionary<string, string>()
                             {
-                                { "webshoppingagg", "Shopping Aggregator for Web Clients" }
+                                {"webshoppingagg", "Shopping Aggregator for Web Clients"}
                             }
                         }
                     }
@@ -176,15 +174,15 @@ namespace Shopping.Gateway
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
-                    .SetIsOriginAllowed((host) => true)
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
             });
 
             return services;
         }
-        
+
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IHostEnvironment env,
             IConfiguration configuration)
         {
@@ -192,19 +190,19 @@ namespace Shopping.Gateway
             {
                 services.AddHttpClient<IBasketApiClient, BasketApiClient>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
-                
+
                 services.AddHttpClient<IBasketService, BasketService>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
-                
+
                 services.AddHttpClient<IOrderingService, OrderingService>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
-                
+
                 services.AddHttpClient<IBasketGrpcClient, BasketGrpcClient>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
-                
+
                 services.AddHttpClient<ICatalogGrpcService, CatalogGrpcService>()
                     .ConfigurePrimaryHttpMessageHandler(ByPassSslCert);
-                    //.AddDevspacesSupport();
+                //.AddDevspacesSupport();
             }
             else
             {
@@ -236,7 +234,7 @@ namespace Shopping.Gateway
 
             handler.ServerCertificateCustomValidationCallback =
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-                // (httpRequestMessage, x509Certificate2, x509Chain, sslPolicyErrors) => true;
+            // (httpRequestMessage, x509Certificate2, x509Chain, sslPolicyErrors) => true;
             return handler;
         }
     }

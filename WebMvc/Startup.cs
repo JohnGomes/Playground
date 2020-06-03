@@ -287,6 +287,7 @@ namespace WebApplication
             return services;
         }
 
+        // TODO remove IgnoreSslErrors in Prod
         // Adds all Http client services
         public static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
         {
@@ -307,7 +308,7 @@ namespace WebApplication
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
                    // .AddDevspacesSupport();
 
-                   if (env.IsDevelopment())
+                   //if (env.IsDevelopment())
                        services.AddHttpClient<ICatalogService, CatalogService>()
                            .ConfigurePrimaryHttpMessageHandler(IgnoreSslErrors())
                            .ConfigureHttpMessageHandlerBuilder(HandlerIgnoreSsl());
@@ -317,15 +318,18 @@ namespace WebApplication
                    //     services.AddHttpClient<ICatalogService, CatalogService>();// .AddDevspacesSupport();
 
                    services.AddHttpClient<IOrderingService, OrderingService>()
+                       .ConfigurePrimaryHttpMessageHandler(IgnoreSslErrors())
                        .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
                        .AddHttpMessageHandler<HttpClientRequestIdDelegatingHandler>();
                  // .AddDevspacesSupport();
 
                  services.AddHttpClient<ICampaignService, CampaignService>()
+                     .ConfigurePrimaryHttpMessageHandler(IgnoreSslErrors())
                      .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
                 // .AddDevspacesSupport();
 
                 services.AddHttpClient<ILocationService, LocationService>()
+                    .ConfigurePrimaryHttpMessageHandler(IgnoreSslErrors())
                     .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
                // .AddDevspacesSupport();
 

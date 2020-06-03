@@ -7,7 +7,7 @@ using Shopping.Gateway.Services;
 
 namespace Shopping.Gateway.Controllers
 {
-    [Route("api/v1/shopping/[controller]")]
+    [Route("api/v1/[controller]")]
     [Authorize]
     [ApiController]
     public class OrderController : ControllerBase

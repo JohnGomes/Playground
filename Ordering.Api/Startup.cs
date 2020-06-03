@@ -9,6 +9,8 @@ using Autofac.Extensions.DependencyInjection;
 using EventBus;
 using EventBus.Abstractions;
 using HealthChecks.UI.Client;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +26,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.OpenApi.Models;
 using Ordering.Api.Application.IntegrationEvents;
 using Ordering.Api.Application.IntegrationEvents.Events;
@@ -64,12 +68,16 @@ namespace Ordering.Api
                 .AddCustomIntegrations(Configuration)
                 .AddCustomConfiguration(Configuration)
                 .AddEventBus(Configuration)
-                .AddCustomAuthentication(Configuration);
+                .AddCustomAuthentication(Configuration)
+                .AddMediatR(typeof(Startup));
+
+            services.AddTransient<IMediator, Mediator>();
             //configure autofac
 
             var container = new ContainerBuilder();
             container.Populate(services);
-
+            
+            container.RegisterAssemblyTypes(typeof(IMediator).GetTypeInfo().Assembly).AsImplementedInterfaces();
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new ApplicationModule(Configuration["ConnectionString"]));
 
@@ -79,6 +87,9 @@ namespace Ordering.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            //TODO
+            IdentityModelEventSource.ShowPII = true;
+            
             //loggerFactory.AddAzureWebAppDiagnostics();
             //loggerFactory.AddApplicationInsights(app.ApplicationServices, LogLevel.Trace);
 
@@ -187,12 +198,11 @@ namespace Ordering.Api
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
-                    .SetIsOriginAllowed((host) => true)
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
             });
-
             return services;
         }
 
@@ -418,23 +428,65 @@ namespace Ordering.Api
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             // prevent from mapping "sub" claim to nameidentifier.
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             var identityUrl = configuration.GetValue<string>("IdentityUrl");
-
+            var sessionCookieLifetime = configuration.GetValue("SessionCookieLifetimeMinutes", 60);
+            
             services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+                {
+                    options.DefaultScheme = "bearer"; // this is the default scheme to be used
+                    options.DefaultChallengeScheme = "bearer";
+                })
+// we configure JWT bearer authentication here
+                .AddJwtBearer("bearer", options =>
+                {
+                    options.Authority = identityUrl; // URL of Identity Server; use IConfiguration instead of hardcoding 
+                    options.MetadataAddress = identityUrl + "/.well-known/openid-configuration";
+                    options.Audience = "orders"; // ID of the client application; either hardcoded or configureable via IConfiguration if needed 
+                    options.RequireHttpsMetadata = false; // require HTTPS (may be disabled in development, but advice against it)
+                    options.SaveToken = true; // cache the token for faster authentication
+                    options.IncludeErrorDetails = true; // get more details on errors; may be disabled in production 
+                });
 
-            }).AddJwtBearer(options =>
-            {
-                options.Authority = identityUrl;
-                options.RequireHttpsMetadata = false;
-                options.Audience = "orders";
-            });
+            // services.AddAuthentication(options =>
+            //     {
+            //         // options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+            //         // options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+            //         //
+            //         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //         options.DefaultChallengeScheme = "oidc";
+            //
+            //     })
+            //     .AddCookie(setup => setup.ExpireTimeSpan = TimeSpan.FromMinutes(sessionCookieLifetime))
+            //     .AddOpenIdConnect(options => {
+            //         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //         options.Authority = identityUrl;
+            //         options.ClientId = "ordering-api";
+            //         options.ClientSecret = "secret";
+            //         options.ResponseType = "code id_token";
+            //         options.SaveTokens = true;
+            //         options.GetClaimsFromUserInfoEndpoint = true;
+            //         options.RequireHttpsMetadata = false;
+            //         options.Scope.Add("openid");
+            //         options.Scope.Add("profile");
+            //         options.Scope.Add("orders");
+            //         options.Scope.Add("basket");
+            //         options.Scope.Add("marketing");
+            //         options.Scope.Add("locations");
+            //         options.Scope.Add("webshoppingagg");
+            //         options.Scope.Add("orders.signalrhub");
+            //     });
+        //     .AddJwtBearer(options =>
+        // {
+        //     options.Authority = identityUrl;
+        //     options.RequireHttpsMetadata = false;
+        //     options.Audience = "orders";
+        //     // options.Configuration = new OpenIdConnectConfiguration();
+        // });
 
-            return services;
+        return services;
         }
     }
 }

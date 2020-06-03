@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.eShopOnContainers.WebMVC.Services;
 using Microsoft.eShopOnContainers.WebMVC.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Microsoft.eShopOnContainers.WebMVC.Controllers
@@ -74,7 +75,8 @@ namespace Microsoft.eShopOnContainers.WebMVC.Controllers
         public async Task<IActionResult> Index(Order item)
         {
             var user = _appUserParser.Parse(HttpContext.User);
-            var vm = await _orderSvc.GetMyOrders(user);
+             var vm = await _orderSvc.GetMyOrders(user);
+           // var vm = new List<Order>();
             return View(vm);
         }
     }

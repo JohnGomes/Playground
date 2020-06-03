@@ -10,6 +10,7 @@ namespace Microsoft.eShopOnContainers.WebMVC
         //public Connectionstrings ConnectionStrings { get; set; }
         public string MarketingUrl { get; set; }
         public string PurchaseUrl { get; set; }
+        public string ShoppingUrl { get; set; }
         public string BasketUrl { get; set; }
         public string CatalogUrl { get; set; }
         public string SignalrHubUrl { get; set; }
